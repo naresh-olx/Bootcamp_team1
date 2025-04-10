@@ -1,6 +1,10 @@
 package com.projectalpha.projectalpha.entity;
 
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,10 +13,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class InventoryEntity {
-    @Id
-    private String sku;
-    private String type;
-    private String status;
-    private String primaryLocation;
+public class User {
+  @Id
+  private String userId;
+  private String userName;
+  private String password;
+  private String email;
 }

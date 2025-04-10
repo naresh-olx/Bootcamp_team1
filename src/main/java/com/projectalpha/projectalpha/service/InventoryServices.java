@@ -16,7 +16,7 @@ public class InventoryServices {
         if (inventoryRepository.existsById(inventoryEntity.getSku())) {
             throw new DuplicateSkuException("Inventory with SKU '" + inventoryEntity.getSku() + "' already exists.");
         }
-        InventoryEntity item = inventoryRepository.insert(inventoryEntity);
-        return item;
+        InventoryEntity Saveditem = inventoryRepository.insert(inventoryEntity);
+        return Saveditem;
     }
 }
