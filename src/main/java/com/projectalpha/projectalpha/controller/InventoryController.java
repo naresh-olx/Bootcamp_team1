@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/V1")
 public class InventoryController {
@@ -20,10 +22,10 @@ public class InventoryController {
         return "Health is OK !! 👌🏻😎";
     }
 
-    @PostMapping("/inventory")
-    public ResponseEntity<?> createInventory(@RequestBody InventoryEntity inventoryEntity) {
+    @PostMapping("/inventory/{userId}")
+    public ResponseEntity<?> createInventory(@RequestBody InventoryEntity inventoryEntity, @PathVariable UUID userId) {
         try {
-            InventoryEntity savedItem = inventoryServices.saveInventoryItem(inventoryEntity);
+            InventoryEntity savedItem = inventoryServices.saveInventoryItem(inventoryEntity, userId);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedItem);
         } catch (DuplicateSkuException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());

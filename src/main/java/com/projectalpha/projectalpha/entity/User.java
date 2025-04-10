@@ -13,8 +13,6 @@ import java.util.UUID;
 @Document(collection = "inventories")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class User {
   @Id
   private UUID userId;

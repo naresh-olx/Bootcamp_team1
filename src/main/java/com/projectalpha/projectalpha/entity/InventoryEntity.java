@@ -10,12 +10,21 @@ import java.util.UUID;
 @Document(collection = "inventories")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class InventoryEntity {
     @Id
     private String sku;
-    private UUID carId;
+
+    private String type;
+    private String PrimaryStatus;
+    private String PrimaryLocation;
+    private int vin;
+    private String make;
+    private String model;
+    private String year;
+    private String trim;
+    private String costPrice;
+    private String sellingPrice;
+
     private UUID createdBy;
     private Date createdAt;
     private UUID updatedBy;

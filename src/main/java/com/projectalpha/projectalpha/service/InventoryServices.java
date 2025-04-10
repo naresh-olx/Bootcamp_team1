@@ -6,13 +6,15 @@ import com.projectalpha.projectalpha.repository.InventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class InventoryServices {
 
     @Autowired
     InventoryRepository inventoryRepository;
 
-    public InventoryEntity saveInventoryItem(InventoryEntity inventoryEntity) {
+    public InventoryEntity saveInventoryItem(InventoryEntity inventoryEntity, UUID userId) {
         if (inventoryRepository.existsById(inventoryEntity.getSku())) {
             throw new DuplicateSkuException("Inventory with SKU '" + inventoryEntity.getSku() + "' already exists.");
         }
