@@ -1,5 +1,6 @@
 package com.projectalpha.projectalpha.controller;
 
+import com.projectalpha.projectalpha.customException.DuplicateSkuException;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.service.InventoryServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class InventoryController {
         try {
             InventoryEntity savedItem = inventoryServices.saveInventoryItem(inventoryEntity);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedItem);
+        } catch (DuplicateSkuException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
