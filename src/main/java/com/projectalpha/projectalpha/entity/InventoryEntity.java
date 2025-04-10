@@ -4,6 +4,9 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+import java.util.UUID;
+
 @Document(collection = "inventories")
 @Data
 @NoArgsConstructor
@@ -11,8 +14,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 public class InventoryEntity {
     @Id
-    private String sku;
-    private String type;
-    private String status;
-    private String primaryLocation;
+    private UUID sku;
+    private UUID carId;
+    private UUID createdBy;
+    private Date createdAt;
+    private UUID updatedBy;
+    private Date updatedAt;
 }
