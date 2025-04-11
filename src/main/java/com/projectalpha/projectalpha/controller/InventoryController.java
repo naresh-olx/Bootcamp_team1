@@ -22,10 +22,10 @@ public class InventoryController {
         return "Health is OK !! 👌🏻😎";
     }
 
-    @PostMapping("/inventory/{userId}")
-    public ResponseEntity<?> createInventory(@RequestBody InventoryEntity inventoryEntity, @PathVariable UUID userId) {
+    @PostMapping("/inventory")
+    public ResponseEntity<?> createInventory(@RequestBody InventoryEntity inventoryEntity) {
         try {
-            InventoryEntity savedItem = inventoryServices.saveInventoryItem(inventoryEntity, userId);
+            InventoryEntity savedItem = inventoryServices.saveInventoryItem(inventoryEntity);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedItem);
         } catch (DuplicateSkuException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());

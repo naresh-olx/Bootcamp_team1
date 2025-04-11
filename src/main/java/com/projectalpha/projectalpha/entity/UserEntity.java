@@ -10,7 +10,7 @@ import java.util.UUID;
 @Document(collection = "inventories")
 @Data
 @NoArgsConstructor
-public class User {
+public class UserEntity {
   @Id
   private UUID userId = UUID.randomUUID();
   private String userName;
