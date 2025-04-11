@@ -18,6 +18,7 @@ public class UserMapper {
                 .userId(user.getUserId())
                 .userName(user.getUserName())
                 .emailId(user.getEmailId())
+                .createdAt(user.getCreatedAt())
                 .build();
     }
 }
