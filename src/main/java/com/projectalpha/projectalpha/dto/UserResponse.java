@@ -1,0 +1,15 @@
+package com.projectalpha.projectalpha.dto;
+
+import lombok.Builder;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+@Data
+@Builder
+public class UserResponse {
+    private String userId;
+    private String userName;
+    private String emailId;
+    private LocalDateTime createdAt;
+}
