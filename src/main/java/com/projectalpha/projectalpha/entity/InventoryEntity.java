@@ -19,8 +19,8 @@ public class InventoryEntity {
     private String sku = UUID.randomUUID().toString();
 
     private String type;
-    private String PrimaryStatus;
-    private String PrimaryLocation;
+    private String primaryStatus;
+    private String primaryLocation;
     private Long vin;
     private String make;
     private String model;
