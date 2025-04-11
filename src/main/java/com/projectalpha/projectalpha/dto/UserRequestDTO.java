@@ -5,11 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.util.UUID;
-
 
 @Data
-public class UserRequest {
+public class UserRequestDTO {
     @NotBlank(message = "Username is required")
     @Size(min = 3, max = 15, message = "Username must be between 3 and 15 characters long")
     private String userName;

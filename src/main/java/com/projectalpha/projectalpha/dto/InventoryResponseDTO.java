@@ -18,8 +18,8 @@ public class InventoryResponseDTO {
     private String costPrice;
     private String sellingPrice;
 
-    private UserRequest createdBy;
+    private UserRequestDTO createdBy;
     private Date createdAt;
-    private UserRequest updatedBy;
+    private UserRequestDTO updatedBy;
     private Date updatedAt;
 }
