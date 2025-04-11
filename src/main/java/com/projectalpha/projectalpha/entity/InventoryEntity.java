@@ -1,15 +1,19 @@
 package com.projectalpha.projectalpha.entity;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
-@Document(collection = "inventories")
+@Document(collection = "inventory")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class InventoryEntity {
     @Id
     private String sku = UUID.randomUUID().toString();
@@ -17,7 +21,7 @@ public class InventoryEntity {
     private String type;
     private String PrimaryStatus;
     private String PrimaryLocation;
-    private int vin;
+    private Long vin;
     private String make;
     private String model;
     private String year;
@@ -26,7 +30,12 @@ public class InventoryEntity {
     private double sellingPrice;
 
     private String createdBy;
-    private Date createdAt;
+
+    @CreatedDate
+    private LocalDate createdAt;
+
     private String updatedBy;
-    private Date updatedAt;
+
+    @LastModifiedDate
+    private LocalDate updatedAt;
 }
