@@ -1,8 +1,5 @@
 package com.projectalpha.projectalpha.entity;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -15,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class User {
   @Id
-  private UUID userId;
+  private UUID userId = UUID.randomUUID();
   private String userName;
   private String password;
   private String email;

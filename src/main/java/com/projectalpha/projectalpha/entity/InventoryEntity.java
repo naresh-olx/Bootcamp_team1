@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class InventoryEntity {
     @Id
-    private String sku;
+    private String sku = UUID.randomUUID().toString();
 
     private String type;
     private String PrimaryStatus;

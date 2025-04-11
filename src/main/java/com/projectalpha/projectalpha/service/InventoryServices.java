@@ -15,7 +15,7 @@ public class InventoryServices {
     InventoryRepository inventoryRepository;
 
     public InventoryEntity saveInventoryItem(InventoryEntity inventoryEntity, UUID userId) {
-        if (inventoryRepository.existsById(inventoryEntity.getSku())) {
+        if (inventoryRepository.existsById(String.valueOf(inventoryEntity.getSku()))) {
             throw new DuplicateSkuException("Inventory with SKU '" + inventoryEntity.getSku() + "' already exists.");
         }
         InventoryEntity Saveditem = inventoryRepository.insert(inventoryEntity);
