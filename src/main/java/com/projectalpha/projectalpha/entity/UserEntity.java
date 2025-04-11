@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserEntity {
   @Id
-  private UUID userId = UUID.randomUUID();
+  private String userId = UUID.randomUUID().toString();
   private String userName;
   private String password;
   private String email;

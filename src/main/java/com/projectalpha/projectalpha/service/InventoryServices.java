@@ -19,7 +19,7 @@ public class InventoryServices {
     UserRepository userRepository;
 
     public InventoryEntity saveInventoryItem(InventoryEntity inventoryEntity) {
-        UUID user = inventoryEntity.getCreatedBy();
+        String user = inventoryEntity.getCreatedBy();
         boolean userExists = userRepository.existsById(user);
         if(!userExists){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User doesn't exist with ID: " + user);

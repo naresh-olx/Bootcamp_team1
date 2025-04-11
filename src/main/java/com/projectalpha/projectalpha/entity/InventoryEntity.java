@@ -25,8 +25,8 @@ public class InventoryEntity {
     private String costPrice;
     private String sellingPrice;
 
-    private UUID createdBy;
+    private String createdBy;
     private Date createdAt;
-    private UUID updatedBy;
+    private String updatedBy;
     private Date updatedAt;
 }
