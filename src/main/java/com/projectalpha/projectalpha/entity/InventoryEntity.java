@@ -22,8 +22,8 @@ public class InventoryEntity {
     private String model;
     private String year;
     private String trim;
-    private String costPrice;
-    private String sellingPrice;
+    private double costPrice;
+    private double sellingPrice;
 
     private String createdBy;
     private Date createdAt;
