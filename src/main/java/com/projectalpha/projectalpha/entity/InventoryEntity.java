@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -21,13 +22,16 @@ public class InventoryEntity {
     private String type;
     private String primaryStatus;
     private String primaryLocation;
+
+    @Indexed(unique = true)
     private Long vin;
+
     private String make;
     private String model;
     private String year;
     private String trim;
-    private double costPrice;
-    private double sellingPrice;
+    private Double costPrice;
+    private Double sellingPrice;
 
     private String createdBy;
 

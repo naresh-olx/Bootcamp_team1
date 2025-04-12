@@ -9,4 +9,7 @@ import java.util.Optional;
 @Component
 public interface InventoryRepository extends MongoRepository<InventoryEntity, String> {
     Optional<InventoryEntity> findBySku(String sku);
+
+    Optional<InventoryEntity> findByVin(Long vin);
+    boolean existsByVin(Long vin);
 }
