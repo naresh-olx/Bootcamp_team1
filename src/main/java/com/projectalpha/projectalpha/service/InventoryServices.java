@@ -49,14 +49,7 @@ public class InventoryServices {
 
     public InventoryEntity updateInventoryItem(String sku, UpdateDTO updateDTO) {
         String userId = updateDTO.getUserId();
-        boolean userExists = userRepository.existsById(userId);
-        if (!userExists) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist with given Id: " + userId);
-        }
-        boolean skuExists = inventoryRepository.existsById(sku);
-        if (!skuExists) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given Id: " + sku);
-        }
+        userIdAndSkuValidator(sku, userId);
         InventoryEntity updatedInventory = inventoryRepository.findById(sku).get();
         if(updateDTO.getVin() != null) {
             updatedInventory.setVin(updateDTO.getVin());
@@ -92,7 +85,7 @@ public class InventoryServices {
         return inventoryRepository.save(updatedInventory);
     }
 
-    public InventoryEntity deleteInventoryItem(String sku, String userId) {
+    private void userIdAndSkuValidator(String sku, String userId) {
         boolean userExists = userRepository.existsById(userId);
         if (!userExists) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist with given Id: " + userId);
@@ -101,6 +94,10 @@ public class InventoryServices {
         if (!skuExists) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given Id: " + sku);
         }
+    }
+
+    public InventoryEntity deleteInventoryItem(String sku, String userId) {
+        userIdAndSkuValidator(sku, userId);
         InventoryEntity deletedInventory = inventoryRepository.findById(sku).get();
         inventoryRepository.deleteById(sku);
         return deletedInventory;
