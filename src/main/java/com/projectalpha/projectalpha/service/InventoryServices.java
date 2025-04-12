@@ -5,6 +5,10 @@ import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.repository.InventoryRepository;
 import com.projectalpha.projectalpha.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
@@ -34,5 +38,10 @@ public class InventoryServices {
         }
         InventoryEntity Saveditem = inventoryRepository.insert(inventoryEntity);
         return Saveditem;
+    }
+
+    public Page<InventoryEntity> getAllInventories(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return inventoryRepository.findAll(pageable);
     }
 }
