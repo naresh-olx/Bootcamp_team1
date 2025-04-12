@@ -16,7 +16,7 @@ import java.util.UUID;
 @Builder
 public class InventoryEntity {
     @Id
-    private String sku = UUID.randomUUID().toString();
+    private String sku = UUID.randomUUID().toString().split("-")[0];
 
     private String type;
     private String primaryStatus;
