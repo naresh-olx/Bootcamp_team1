@@ -13,8 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 class InventoryControllerTest {
 
@@ -39,9 +38,7 @@ class InventoryControllerTest {
                 .build();
 
         when(inventoryServices.getInventoryBySku(sku)).thenReturn(mockInventory);
-
         ResponseEntity<?> response = inventoryController.getBySku(sku);
-
         assertEquals(OK, response.getStatusCode());
         assertEquals(mockInventory, response.getBody());
         verify(inventoryServices, times(1)).getInventoryBySku(sku);
@@ -57,12 +54,22 @@ class InventoryControllerTest {
         ResponseEntity<?> response = inventoryController.getBySku(sku);
 
         assertEquals(NOT_FOUND, response.getStatusCode());
-
         ErrorResponse error = (ErrorResponse) response.getBody();
         assertNotNull(error);
         assertEquals(NOT_FOUND, error.getErrorCode());
         assertEquals("Item not found", error.getErrorMessage());
+        verify(inventoryServices, times(1)).getInventoryBySku(sku);
+    }
 
+    @Test
+    void testGetBySku_UnexpectedException() {
+        String sku = "SKU_EXCEPTION";
+        when(inventoryServices.getInventoryBySku(sku)).thenThrow(new RuntimeException("Internal Server Error"));
+
+        ResponseEntity<?> response = inventoryController.getBySku(sku);
+
+        assertEquals(INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("Failed to fetch Item: Internal Server Error",response.getBody().toString());
         verify(inventoryServices, times(1)).getInventoryBySku(sku);
     }
 }
