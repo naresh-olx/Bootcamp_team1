@@ -11,11 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.UUID;
 
 @Service
 public class InventoryServices {
@@ -24,9 +21,12 @@ public class InventoryServices {
     private InventoryRepository inventoryRepository;
     UserRepository userRepository;
 
-    public InventoryEntity saveInventoryItem(InventoryEntity inventoryEntity) {
+    public InventoryEntity saveInventory(InventoryEntity inventoryEntity) {
+
         String user = inventoryEntity.getCreatedBy();
+
         boolean userExists = userRepository.existsById(user);
+
         if(!userExists){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User doesn't exist with ID: " + user);
         }
@@ -35,8 +35,7 @@ public class InventoryServices {
             throw new DuplicateSkuException("Inventory with SKU '" + inventoryEntity.getSku() + "' already exists.");
         }
 
-        InventoryEntity Saveditem = inventoryRepository.insert(inventoryEntity);
-        return Saveditem;
+        return inventoryRepository.insert(inventoryEntity);
     }
 
     public Page<InventoryEntity> getAllInventories(int page, int size) {
