@@ -1,6 +1,7 @@
 package com.projectalpha.projectalpha.service;
 
 import com.projectalpha.projectalpha.customException.DuplicateSkuException;
+import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.repository.InventoryRepository;
 import com.projectalpha.projectalpha.repository.UserRepository;
@@ -50,20 +51,48 @@ public class InventoryServices {
         return inventoryRepository.findBySku(sku).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    public InventoryEntity updateInventory(String sku, InventoryEntity updatedItem) {
-        InventoryEntity savedItem = inventoryRepository.findBySku(sku).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        savedItem.setType(updatedItem.getType());
-        savedItem.setPrimaryStatus(updatedItem.getPrimaryStatus());
-        savedItem.setPrimaryLocation(updatedItem.getPrimaryLocation());
-        savedItem.setVin(updatedItem.getVin());
-        savedItem.setMake(updatedItem.getMake());
-        savedItem.setModel(updatedItem.getModel());
-        savedItem.setYear(updatedItem.getYear());
-        savedItem.setTrim(updatedItem.getTrim());
-        savedItem.setSellingPrice(updatedItem.getSellingPrice());
-        savedItem.setCostPrice(updatedItem.getCostPrice());
-
-        return inventoryRepository.save(savedItem);
+    public InventoryEntity updateInventoryItem(String sku, UpdateDTO updateDTO) {
+        String userId = updateDTO.getUserId();
+        boolean userExists = userRepository.existsById(userId);
+        if (!userExists) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist with given Id: " + userId);
+        }
+        boolean skuExists = inventoryRepository.existsById(sku);
+        if (!skuExists) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given Id: " + sku);
+        }
+        InventoryEntity updatedInventory = inventoryRepository.findById(sku).get();
+        if(updateDTO.getVin() != null) {
+            updatedInventory.setVin(updateDTO.getVin());
+        }
+        if (updateDTO.getType() != null){
+            updatedInventory.setType(updateDTO.getType());
+        }
+        if (updateDTO.getPrimaryStatus() != null){
+            updatedInventory.setPrimaryStatus(updateDTO.getPrimaryStatus());
+        }
+        if (updateDTO.getPrimaryLocation() != null){
+            updatedInventory.setPrimaryLocation(updateDTO.getPrimaryLocation());
+        }
+        if (updateDTO.getMake() != null){
+            updatedInventory.setMake(updateDTO.getMake());
+        }
+        if (updateDTO.getModel() != null){
+            updatedInventory.setModel(updateDTO.getModel());
+        }
+        if (updateDTO.getYear() != null){
+            updatedInventory.setYear(updateDTO.getYear());
+        }
+        if (updateDTO.getTrim() != null){
+            updatedInventory.setTrim(updateDTO.getTrim());
+        }
+        if(updateDTO.getCostPrice() != null){
+            updatedInventory.setCostPrice(updateDTO.getCostPrice());
+        }
+        if(updateDTO.getSellingPrice() != null){
+            updatedInventory.setSellingPrice(updateDTO.getSellingPrice());
+        }
+        updatedInventory.setUpdatedBy(updateDTO.getUserId());
+        return inventoryRepository.save(updatedInventory);
     }
 }
