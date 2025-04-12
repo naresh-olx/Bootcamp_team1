@@ -1,5 +1,6 @@
 package com.projectalpha.projectalpha.controller;
 
+import com.projectalpha.projectalpha.dto.ErrorResponse;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.service.InventoryServices;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,9 +9,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 class InventoryControllerTest {
@@ -28,13 +31,40 @@ class InventoryControllerTest {
 
     @Test
     void testGetBySku_Success() {
-        String sku = "123-xyz";
-        InventoryEntity mockItem = InventoryEntity.builder().sku(sku).vin(12345L).make("Toyota").build();
+        String sku = "SKU123";
+        InventoryEntity mockInventory = InventoryEntity.builder()
+                .sku(sku)
+                .vin(123456L)
+                .make("Toyota")
+                .build();
 
-        when(inventoryServices.getInventoryBySku(sku)).thenReturn(mockItem);
+        when(inventoryServices.getInventoryBySku(sku)).thenReturn(mockInventory);
 
-        ResponseEntity<?> responseEntity = inventoryController.getBySku(sku);
+        ResponseEntity<?> response = inventoryController.getBySku(sku);
 
-        assertEquals(OK , responseEntity.getStatusCode());
+        assertEquals(OK, response.getStatusCode());
+        assertEquals(mockInventory, response.getBody());
+        verify(inventoryServices, times(1)).getInventoryBySku(sku);
+    }
+
+    @Test
+    void testGetBySku_ItemNotFound() {
+        String sku = "SKU_NOT_EXIST";
+
+        ResponseStatusException exception = new ResponseStatusException(NOT_FOUND, "Item not found");
+        when(inventoryServices.getInventoryBySku(sku)).thenThrow(exception);
+
+        ResponseEntity<?> response = inventoryController.getBySku(sku);
+
+        assertEquals(NOT_FOUND, response.getStatusCode());
+
+        ErrorResponse error = (ErrorResponse) response.getBody();
+        assertNotNull(error);
+        assertEquals(NOT_FOUND, error.getErrorCode());
+        assertEquals("Item not found", error.getErrorMessage());
+
+        verify(inventoryServices, times(1)).getInventoryBySku(sku);
     }
 }
+
+
