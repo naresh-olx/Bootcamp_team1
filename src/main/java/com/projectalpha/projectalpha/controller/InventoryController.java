@@ -57,7 +57,7 @@ public class InventoryController {
             InventoryEntity item = inventoryServices.getInventoryBySku(sku);
             return ResponseEntity.ok(item);
         } catch (ResponseStatusException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(HttpStatus.NOT_FOUND, e.getMessage()));
+            return ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch Item: " + e.getMessage());
         }
@@ -69,7 +69,19 @@ public class InventoryController {
             InventoryEntity updatedItem = inventoryServices.updateInventoryItem(sku , updateDTO);
             return ResponseEntity.status(HttpStatus.OK).body(updatedItem);
         } catch (ResponseStatusException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));
+            return ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/{sku}")
+    public ResponseEntity<?> delete(@PathVariable String sku) {
+        try {
+            InventoryEntity deletedItem = inventoryServices.deleteInventoryItem(sku, null);
+            return ResponseEntity.status(HttpStatus.OK).body(deletedItem);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
         }
