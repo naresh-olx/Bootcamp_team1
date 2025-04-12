@@ -2,6 +2,7 @@ package com.projectalpha.projectalpha.controller;
 
 import com.projectalpha.projectalpha.customException.DuplicateSkuException;
 import com.projectalpha.projectalpha.dto.ErrorResponse;
+import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.service.InventoryServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,27 +57,21 @@ public class InventoryController {
             InventoryEntity item = inventoryServices.getInventoryBySku(sku);
             return ResponseEntity.ok(item);
         } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode())
-                    .body(new ErrorResponse("ITEM_NOT_FOUND", e.getReason()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Item Not Found", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("INTERNAL_ERROR",
-                            "Failed to fetch item: " + e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch Item: " + e.getMessage());
         }
     }
 
     @PutMapping("/{sku}")
-    public ResponseEntity<?> update(@PathVariable String sku, @RequestBody InventoryEntity inventoryEntity) {
+    public ResponseEntity<?> update(@PathVariable String sku, @RequestBody UpdateDTO updateDTO) {
         try {
-            InventoryEntity updatedItem = inventoryServices.updateInventory(sku, inventoryEntity);
+            InventoryEntity updatedItem = inventoryServices.updateInventoryItem(sku , updateDTO);
             return ResponseEntity.ok(updatedItem);
         } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode())
-                    .body(new ErrorResponse("ITEM_NOT_FOUND", e.getReason()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Item Not Found having SKU: " + sku , e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("INTERNAL_ERROR",
-                            "Failed to update item: " + e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to Update Item: " + e.getMessage());
         }
     }
 }
