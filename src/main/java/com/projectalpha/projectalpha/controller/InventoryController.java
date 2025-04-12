@@ -1,6 +1,7 @@
 package com.projectalpha.projectalpha.controller;
 
 import com.projectalpha.projectalpha.customException.DuplicateSkuException;
+import com.projectalpha.projectalpha.dto.ErrorResponse;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.service.InventoryServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @RestController
@@ -16,7 +18,7 @@ import java.util.UUID;
 public class InventoryController {
 
     @Autowired
-    InventoryServices inventoryServices;
+    private InventoryServices inventoryServices;
 
     @GetMapping("/health-ok")
     public String HealthOk() {
@@ -48,5 +50,24 @@ public class InventoryController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch inventories: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/{sku}")
+    public ResponseEntity<?> getBySku(@PathVariable String sku) {
+        try {
+            InventoryEntity inventory = inventoryServices.getInventoryBySku(sku);
+            return ResponseEntity.ok(inventory);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("NOT_FOUND", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch inventory: " + e.getMessage());
+        }
+    }
+
+    private static Object error(String code, String message) {
+        return new java.util.HashMap<>() {{
+            put("errorCode", code);
+            put("errorMessage", message);
+        }};
     }
 }
