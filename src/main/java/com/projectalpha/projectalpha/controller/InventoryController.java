@@ -56,21 +56,27 @@ public class InventoryController {
             InventoryEntity item = inventoryServices.getInventoryBySku(sku);
             return ResponseEntity.ok(item);
         } catch (ResponseStatusException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Item Not Found", e.getMessage()));
+            return ResponseEntity.status(e.getStatusCode())
+                    .body(new ErrorResponse("ITEM_NOT_FOUND", e.getReason()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch Item: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("INTERNAL_ERROR",
+                            "Failed to fetch item: " + e.getMessage()));
         }
     }
 
     @PutMapping("/{sku}")
     public ResponseEntity<?> update(@PathVariable String sku, @RequestBody InventoryEntity inventoryEntity) {
         try {
-            InventoryEntity updatedItem = inventoryServices.updateInventory(sku , inventoryEntity);
+            InventoryEntity updatedItem = inventoryServices.updateInventory(sku, inventoryEntity);
             return ResponseEntity.ok(updatedItem);
         } catch (ResponseStatusException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Item Not Found having SKU: " + sku , e.getMessage()));
+            return ResponseEntity.status(e.getStatusCode())
+                    .body(new ErrorResponse("ITEM_NOT_FOUND", e.getReason()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to Update Item: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("INTERNAL_ERROR",
+                            "Failed to update item: " + e.getMessage()));
         }
     }
 }
