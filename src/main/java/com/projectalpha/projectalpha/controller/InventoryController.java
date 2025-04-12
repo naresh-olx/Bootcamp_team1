@@ -30,11 +30,11 @@ public class InventoryController {
             InventoryEntity savedItem = inventoryServices.saveInventory(inventoryEntity);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedItem);
         } catch (DuplicateSkuException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse("Conflict", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(HttpStatus.CONFLICT, e.getMessage()));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Bad Request", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("Failed to create Item", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
         }
     }
 
@@ -57,7 +57,7 @@ public class InventoryController {
             InventoryEntity item = inventoryServices.getInventoryBySku(sku);
             return ResponseEntity.ok(item);
         } catch (ResponseStatusException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Item Not Found", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(HttpStatus.NOT_FOUND, e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch Item: " + e.getMessage());
         }
@@ -69,9 +69,9 @@ public class InventoryController {
             InventoryEntity updatedItem = inventoryServices.updateInventoryItem(sku , updateDTO);
             return ResponseEntity.status(HttpStatus.OK).body(updatedItem);
         } catch (ResponseStatusException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
         }
     }
 }
