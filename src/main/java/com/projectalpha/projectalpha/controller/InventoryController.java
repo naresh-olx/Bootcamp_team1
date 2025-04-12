@@ -67,11 +67,11 @@ public class InventoryController {
     public ResponseEntity<?> update(@PathVariable String sku, @RequestBody UpdateDTO updateDTO) {
         try {
             InventoryEntity updatedItem = inventoryServices.updateInventoryItem(sku , updateDTO);
-            return ResponseEntity.ok(updatedItem);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedItem);
         } catch (ResponseStatusException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Item Not Found having SKU: " + sku , e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to Update Item: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 }
