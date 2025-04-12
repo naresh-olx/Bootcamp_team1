@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -57,17 +58,10 @@ public class InventoryController {
         try {
             InventoryEntity inventory = inventoryServices.getInventoryBySku(sku);
             return ResponseEntity.ok(inventory);
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("NOT_FOUND", e.getMessage()));
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Inventory Not Found", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch inventory: " + e.getMessage());
         }
-    }
-
-    private static Object error(String code, String message) {
-        return new java.util.HashMap<>() {{
-            put("errorCode", code);
-            put("errorMessage", message);
-        }};
     }
 }

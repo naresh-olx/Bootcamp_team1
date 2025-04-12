@@ -46,5 +46,7 @@ public class InventoryServices {
         return inventoryRepository.findAll(pageable);
     }
 
-    public InventoryEntity getInventoryBySku(String sku) {}
+    public InventoryEntity getInventoryBySku(String sku) {
+        return inventoryRepository.findBySku(sku).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
 }
