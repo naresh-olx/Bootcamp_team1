@@ -11,9 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.NoSuchElementException;
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/V1")
 public class InventoryController {
@@ -56,12 +53,24 @@ public class InventoryController {
     @GetMapping("/{sku}")
     public ResponseEntity<?> getBySku(@PathVariable String sku) {
         try {
-            InventoryEntity inventory = inventoryServices.getInventoryBySku(sku);
-            return ResponseEntity.ok(inventory);
+            InventoryEntity item = inventoryServices.getInventoryBySku(sku);
+            return ResponseEntity.ok(item);
         } catch (ResponseStatusException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Inventory Not Found", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Item Not Found", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch inventory: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch Item: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/{sku}")
+    public ResponseEntity<?> update(@PathVariable String sku, @RequestBody InventoryEntity inventoryEntity) {
+        try {
+            InventoryEntity updatedItem = inventoryServices.updateInventory(sku , inventoryEntity);
+            return ResponseEntity.ok(updatedItem);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Item Not Found", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to Update Item: " + e.getMessage());
         }
     }
 }

@@ -49,4 +49,8 @@ public class InventoryServices {
     public InventoryEntity getInventoryBySku(String sku) {
         return inventoryRepository.findBySku(sku).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
+
+    public InventoryEntity updateInventory(String sku, InventoryEntity inventoryEntity) {
+
+    }
 }
