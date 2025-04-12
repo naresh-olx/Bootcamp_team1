@@ -91,4 +91,18 @@ public class InventoryServices {
         updatedInventory.setUpdatedBy(updateDTO.getUserId());
         return inventoryRepository.save(updatedInventory);
     }
+
+    public InventoryEntity deleteInventoryItem(String sku, String userId) {
+        boolean userExists = userRepository.existsById(userId);
+        if (!userExists) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist with given Id: " + userId);
+        }
+        boolean skuExists = inventoryRepository.existsById(sku);
+        if (!skuExists) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given Id: " + sku);
+        }
+        InventoryEntity deletedInventory = inventoryRepository.findById(sku).get();
+        inventoryRepository.deleteById(sku);
+        return deletedInventory;
+    }
 }
