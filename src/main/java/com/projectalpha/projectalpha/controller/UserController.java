@@ -3,6 +3,7 @@ package com.projectalpha.projectalpha.controller;
 
 import com.projectalpha.projectalpha.customException.DuplicateSkuException;
 import com.projectalpha.projectalpha.dto.ErrorResponse;
+import com.projectalpha.projectalpha.dto.UserRequestDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.service.InventoryServices;
 import com.projectalpha.projectalpha.service.UserServices;
@@ -20,12 +21,12 @@ public class UserController {
     private UserServices userServices;
 
     @PostMapping("/user")
-    public ResponseEntity<?> createInventory(@RequestBody InventoryEntity inventoryEntity) {
+    public ResponseEntity<?> createInventory(@RequestBody UserRequestDTO userDTO) {
         return null;
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getBySku(@PathVariable String sku){
+    public ResponseEntity<?> getUserById(@PathVariable String userId){
         return null;
     }
 }
