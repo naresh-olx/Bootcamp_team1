@@ -35,9 +35,6 @@ public class InventoryServices {
             throw new DuplicateSkuException("Inventory with SKU '" + inventoryEntity.getSku() + "' already exists.");
         }
 
-        if (inventoryRepository.existsById(String.valueOf(inventoryEntity.getSku()))) {
-            throw new DuplicateSkuException("Inventory with SKU '" + inventoryEntity.getSku() + "' already exists.");
-        }
         InventoryEntity Saveditem = inventoryRepository.insert(inventoryEntity);
         return Saveditem;
     }
