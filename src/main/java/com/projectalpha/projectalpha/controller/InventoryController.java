@@ -68,7 +68,7 @@ public class InventoryController {
             InventoryEntity updatedItem = inventoryServices.updateInventory(sku , inventoryEntity);
             return ResponseEntity.ok(updatedItem);
         } catch (ResponseStatusException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Item Not Found", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Item Not Found having SKU: " + sku , e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to Update Item: " + e.getMessage());
         }

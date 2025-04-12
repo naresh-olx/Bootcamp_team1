@@ -50,7 +50,20 @@ public class InventoryServices {
         return inventoryRepository.findBySku(sku).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    public InventoryEntity updateInventory(String sku, InventoryEntity inventoryEntity) {
+    public InventoryEntity updateInventory(String sku, InventoryEntity updatedItem) {
+        InventoryEntity savedItem = inventoryRepository.findBySku(sku).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
+        savedItem.setType(updatedItem.getType());
+        savedItem.setPrimaryStatus(updatedItem.getPrimaryStatus());
+        savedItem.setPrimaryLocation(updatedItem.getPrimaryLocation());
+        savedItem.setVin(updatedItem.getVin());
+        savedItem.setMake(updatedItem.getMake());
+        savedItem.setModel(updatedItem.getModel());
+        savedItem.setYear(updatedItem.getYear());
+        savedItem.setTrim(updatedItem.getTrim());
+        savedItem.setSellingPrice(updatedItem.getSellingPrice());
+        savedItem.setCostPrice(updatedItem.getCostPrice());
+
+        return inventoryRepository.save(savedItem);
     }
 }
