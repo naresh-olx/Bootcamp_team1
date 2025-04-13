@@ -19,7 +19,7 @@ public class InventoryRequestDTO {
     @NotBlank(message = "Type is required")
     private String type;
 
-    @NotBlank(message = "Primary status is required")
+    @NotNull(message = "Primary status is required")
     private InventoryStatus primaryStatus;
 
     @NotBlank(message = "Primary location is required")

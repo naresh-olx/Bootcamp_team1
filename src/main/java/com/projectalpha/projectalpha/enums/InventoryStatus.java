@@ -22,6 +22,6 @@ public enum InventoryStatus {
                 return status;
             }
         }
-        throw new IllegalArgumentException("Invalid inventory status value, this can be only CREATED or PROCURED or SOLD");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid inventory status value, this can be only CREATED or PROCURED or SOLD");
     }
 }
