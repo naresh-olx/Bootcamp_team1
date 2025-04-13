@@ -281,6 +281,20 @@ class InventoryControllerTest {
         assertEquals(responseDTO,(InventoryResponseDTO) result.getBody());
         verify(inventoryServices, times(1)).saveInventory(requestDTO);
     }
+
+    @Test
+    void createInventory_ThrowsIllegalArgumentException() {
+        InventoryRequestDTO requestDTO = getInventoryRequestDTO();
+
+        when(inventoryServices.saveInventory(requestDTO)).thenThrow(new IllegalArgumentException("Invalid input"));
+        ResponseEntity<?> result = inventoryController.createInventory(requestDTO);
+
+        assertEquals(BAD_REQUEST, result.getStatusCode());
+        assertTrue(result.getBody() instanceof ErrorResponse);
+        ErrorResponse errorResponse = (ErrorResponse) result.getBody();
+        assertEquals("Invalid input",errorResponse.getErrorMessage());
+        verify(inventoryServices, times(1)).saveInventory(requestDTO);
+    }
 }
 
 
