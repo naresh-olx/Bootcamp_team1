@@ -20,7 +20,7 @@ public class UserController {
     @Autowired
     private UserServices userServices;
 
-    @PostMapping("/user")
+    @PostMapping("/signup")
     public ResponseEntity<?> createInventory(@RequestBody UserRequestDTO userDTO) {
         return null;
     }
