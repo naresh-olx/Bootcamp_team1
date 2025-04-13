@@ -36,7 +36,6 @@ class InventoryControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    // GetBySku Method Tests
     @Test
     void testGetBySku_Success() {
         String sku = "SKU123";
@@ -82,8 +81,6 @@ class InventoryControllerTest {
         verify(inventoryServices, times(1)).getInventoryBySku(sku);
     }
 
-
-    // Delete-By-Sku Method test
     @Test
     void testDelete_WhenSkuExists_ReturnsDeleteItem() {
         String sku = "SKU123";
@@ -207,7 +204,6 @@ class InventoryControllerTest {
         verify(inventoryServices, times(1)).updateInventoryItem(sku,dto);
     }
 
-    // Update-Status Test Method
     @Test
     void updateStatus_Success() {
         String sku = "SKU123";

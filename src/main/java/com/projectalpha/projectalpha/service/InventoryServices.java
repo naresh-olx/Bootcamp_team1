@@ -151,11 +151,12 @@ public class InventoryServices {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist with given EmailId: " + emailId);
         }
 
-        boolean skuExists = inventoryRepository.existsById(sku);
-        if (!skuExists) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given sku: " + sku);
+        InventoryEntity inventory = inventoryRepository.findById(sku).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory not found"));
+
+        if (!inventory.getCreatedBy().equals(userEntity.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "user is unauthorised");
         }
-        boolean skuUserMatches = userEntity.getUserId().equals(emailId);
     }
 
     public InventoryEntity updateInventoryStatus(String sku, InventoryStatus status, String userId) {
