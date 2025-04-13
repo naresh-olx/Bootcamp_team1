@@ -138,6 +138,22 @@ class InventoryControllerTest {
 
         verify(inventoryServices, times(1)).getAllInventories(page, size);
     }
+
+    @Test
+    void testGetAllInventory_UnexpectedException() {
+        int page = 0;
+        int size = 5;
+
+        when(inventoryServices.getAllInventories(page, size))
+                .thenThrow(new RuntimeException("Database connection failed"));
+
+        ResponseEntity<?> response = inventoryController.getAllInventory(page, size);
+
+        assertEquals(INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertTrue(response.getBody().toString().contains("Failed to fetch inventories: Database connection failed"));
+
+        verify(inventoryServices, times(1)).getAllInventories(page, size);
+    }
 }
 
 
