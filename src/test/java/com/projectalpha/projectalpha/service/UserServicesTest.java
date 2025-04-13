@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -128,4 +129,19 @@ class UserServicesTest {
         assertEquals("User doesn't exist with EmailId: yash@example.com", exception.getReason());
     }
 
+    @Test
+    void loginUser_IncorrectPassword() {
+        UserLoginDTO loginDTO = getValidLoginDTO();
+
+        when(userRepository.existsByEmailId(loginDTO.getEmailId())).thenReturn(true);
+        doThrow(new BadCredentialsException("Bad credentials"))
+                .when(authenticationManager)
+                .authenticate(any(UsernamePasswordAuthenticationToken.class));
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+                () -> userServices.loginUser(loginDTO));
+
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
+        assertEquals("Incorrect password", exception.getReason());
+    }
 }
