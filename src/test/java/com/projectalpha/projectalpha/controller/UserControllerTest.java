@@ -71,4 +71,17 @@ class UserControllerTest {
         assertEquals(HttpStatus.CONFLICT,response.getStatusCode());
         verify(userServices,times(1)).registerUser(userRequestDTO);
     }
+
+    @Test
+    void createUser_InternalServerError() {
+        UserRequestDTO userRequestDTO = mockRequestDTO();
+
+        when(userServices.registerUser(userRequestDTO)).thenThrow(new RuntimeException("Internal Server Error"));
+        ResponseEntity<?> response = userController.createUser(userRequestDTO);
+
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,response.getStatusCode());
+        verify(userServices,times(1)).registerUser(userRequestDTO);
+    }
 }
