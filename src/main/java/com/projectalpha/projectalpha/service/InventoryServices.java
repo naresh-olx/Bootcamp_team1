@@ -93,11 +93,9 @@ public class InventoryServices {
     }
 
     public InventoryResponseDTO updateInventoryItem(String sku, InventoryRequestDTO updateDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String emailId = authentication.getName();
-        UserEntity userEntity = userRepository.findByEmailId(emailId);
 
-        userIdAndSkuValidator(sku);
+        String emailId = userIdAndSkuValidator(sku);
+
         InventoryEntity updatedInventory = inventoryRepository.findById(sku).get();
         if(updateDTO.getVin() != null) {
             updatedInventory.setVin(updateDTO.getVin());
@@ -129,7 +127,7 @@ public class InventoryServices {
         if(updateDTO.getSellingPrice() != null){
             updatedInventory.setSellingPrice(updateDTO.getSellingPrice());
         }
-        updatedInventory.setUpdatedBy(userEntity.getUserId());
+        updatedInventory.setUpdatedBy(emailId);
         updatedInventory.setUpdatedAt(LocalDateTime.now());
         return InventoryMapper.toResponseDTO(inventoryRepository.save(updatedInventory));
     }
@@ -141,7 +139,7 @@ public class InventoryServices {
         return InventoryMapper.toResponseDTO(deletedInventory);
     }
 
-    private void userIdAndSkuValidator(String sku) {
+    private String userIdAndSkuValidator(String sku) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String emailId = authentication.getName();
@@ -157,16 +155,17 @@ public class InventoryServices {
         if (!inventory.getCreatedBy().equals(userEntity.getUserId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "user is unauthorised");
         }
+        return emailId;
     }
 
-    public InventoryResponseDTO updateInventoryStatus(String sku, InventoryStatus status, String userId) {
-        userIdAndSkuValidator(sku);
+    public InventoryResponseDTO updateInventoryStatus(String sku, InventoryRequestDTO updateDTO) {
+        String emailId = userIdAndSkuValidator(sku);
 
         InventoryEntity inventory = inventoryRepository.findById(sku)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given Id: " + sku));
 
-        inventory.setPrimaryStatus(status);
-        inventory.setUpdatedBy(userId);
+        inventory.setPrimaryStatus(updateDTO.getPrimaryStatus());
+        inventory.setUpdatedBy(emailId);
         return InventoryMapper.toResponseDTO(inventoryRepository.save(inventory));
     }
 
