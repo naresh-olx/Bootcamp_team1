@@ -102,4 +102,16 @@ public class InventoryServices {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given Id: " + sku);
         }
     }
+
+    public InventoryEntity updateInventoryStatus(String sku, String status, String userId) {
+        userIdAndSkuValidator(sku, userId);
+
+        InventoryEntity inventory = inventoryRepository.findById(sku)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given Id: " + sku));
+
+        inventory.setPrimaryStatus(status);
+        inventory.setUpdatedBy(userId);
+        return inventoryRepository.save(inventory);
+    }
+
 }
