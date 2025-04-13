@@ -251,7 +251,6 @@ class InventoryControllerTest {
     }
 
 
-    // Create Inventory Test
     private InventoryRequestDTO getInventoryRequestDTO() {
         InventoryRequestDTO dto = new InventoryRequestDTO();
         dto.setMake("Mahindra");

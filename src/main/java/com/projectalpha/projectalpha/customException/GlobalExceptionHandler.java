@@ -5,15 +5,12 @@ import com.projectalpha.projectalpha.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -57,7 +54,10 @@ public class GlobalExceptionHandler {
         if (cause instanceof InvalidFormatException && cause.getMessage().contains("InventoryStatus")) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid inventory status value, this can be only CREATED or PROCURED or SOLD"));
+                    .body(new ErrorResponse(
+                            HttpStatus.BAD_REQUEST,
+                            "Invalid inventory status value, this can be only CREATED or PROCURED or SOLD"
+                    ));
         }
 
         return ResponseEntity

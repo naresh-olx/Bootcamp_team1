@@ -48,8 +48,4 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<?> getUserById(@PathVariable String userId){
-        return null;
-    }
 }
