@@ -35,12 +35,19 @@ public class InventoryServices {
         String emailId = authentication.getName();
         UserEntity userEntity = userRepository.findByEmailId(emailId);
 
+        if (inventoryEntity.getVin() == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VIN is required");
+        }
+
         if(userEntity == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user doesn't exist");
         }
 
-        if (inventoryRepository.existsById(inventoryEntity.getSku())) {
-            throw new DuplicateSkuException("Inventory with SKU '" + inventoryEntity.getSku() + "' already exists.");
+        boolean vinExists = inventoryRepository.existsByVin(inventoryEntity.getVin());
+
+        if (vinExists) {
+//            throw new DuplicateSkuException("Inventory with SKU '" + inventoryEntity.getSku() + "' already exists.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Inventory with this VIN already exists");
         }
 
         inventoryEntity.setCreatedBy(userEntity.getUserId());

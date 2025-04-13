@@ -30,11 +30,14 @@ public class InventoryController {
         try {
             InventoryEntity savedItem = inventoryServices.saveInventory(inventoryEntity);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedItem);
-        } catch (DuplicateSkuException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(HttpStatus.CONFLICT, e.getMessage()));
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
-        } catch (Exception e) {
+        }
+        catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));
+        }
+        catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
         }
     }

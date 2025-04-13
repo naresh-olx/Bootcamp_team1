@@ -13,5 +13,7 @@ import java.util.Optional;
 public interface InventoryRepository extends MongoRepository<InventoryEntity, String>, PagingAndSortingRepository<InventoryEntity, String> {
     Optional<InventoryEntity> findBySku(String sku);
     Page<InventoryEntity> findAllByCreatedBy(String userId, Pageable pageable);
+    boolean existsByVin(Long vin);
+
 
 }
