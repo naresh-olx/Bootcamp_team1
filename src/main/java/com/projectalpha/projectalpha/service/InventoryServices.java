@@ -34,6 +34,10 @@ public class InventoryServices {
         String emailId = authentication.getName();
         UserEntity userEntity = userRepository.findByEmailId(emailId);
 
+        if(userEntity == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user doesn't exist");
+        }
+
         if (inventoryRepository.existsById(inventoryEntity.getSku())) {
             throw new DuplicateSkuException("Inventory with SKU '" + inventoryEntity.getSku() + "' already exists.");
         }
@@ -54,7 +58,15 @@ public class InventoryServices {
     }
 
     public InventoryEntity updateInventoryItem(String sku, UpdateDTO updateDTO) {
-        String userId = updateDTO.getUserId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String emailId = authentication.getName();
+        UserEntity userEntity = userRepository.findByEmailId(emailId);
+
+        if(userEntity == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user doesn't exist");
+        }
+
+        String userId = userEntity.getUserId();
         userIdAndSkuValidator(sku, userId);
         InventoryEntity updatedInventory = inventoryRepository.findById(sku).get();
         if(updateDTO.getVin() != null) {
