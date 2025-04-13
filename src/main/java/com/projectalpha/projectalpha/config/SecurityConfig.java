@@ -24,7 +24,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(customizer -> customizer.disable()).
-                authorizeHttpRequests(request -> request.requestMatchers("/api/V1/**").authenticated()).
+                authorizeHttpRequests(request -> request.requestMatchers("/api/V1/**").authenticated()
+                .anyRequest().permitAll()).
                 httpBasic(Customizer.withDefaults()).
                 sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
     }
