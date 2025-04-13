@@ -159,18 +159,15 @@ public class InventoryServices {
         }
     }
 
-    public InventoryEntity updateInventoryStatus(String sku, InventoryStatus status, String userId) {
+    public InventoryResponseDTO updateInventoryStatus(String sku, InventoryStatus status, String userId) {
         userIdAndSkuValidator(sku);
 
         InventoryEntity inventory = inventoryRepository.findById(sku)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Sku doesn't exist with given Id: " + sku
-                ));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given Id: " + sku));
 
         inventory.setPrimaryStatus(status);
         inventory.setUpdatedBy(userId);
-        return inventoryRepository.save(inventory);
+        return InventoryMapper.toResponseDTO(inventoryRepository.save(inventory));
     }
 
 }

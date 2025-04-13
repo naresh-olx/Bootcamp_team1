@@ -211,7 +211,7 @@ class InventoryControllerTest {
         InventoryStatus status = InventoryStatus.SOLD;
         String userId = "user123";
 
-        InventoryEntity item = InventoryEntity.builder().sku(sku).make("Toyota").build();
+        InventoryResponseDTO item = InventoryResponseDTO.builder().sku(sku).make("Toyota").build();
         when(inventoryServices.updateInventoryStatus(sku,status,userId)).thenReturn(item);
         ResponseEntity<?> result = inventoryController.updateStatus(sku,status,userId);
 
