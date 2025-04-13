@@ -4,7 +4,6 @@ import com.projectalpha.projectalpha.dto.InventoryRequestDTO;
 import com.projectalpha.projectalpha.dto.InventoryResponseDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.entity.UserEntity;
-import com.projectalpha.projectalpha.enums.InventoryStatus;
 import com.projectalpha.projectalpha.mapper.InventoryMapper;
 import com.projectalpha.projectalpha.repository.InventoryRepository;
 import com.projectalpha.projectalpha.repository.UserRepository;

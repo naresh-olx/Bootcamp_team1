@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/api/V1/inventories")
+@RequestMapping("/api/V1/inventory")
 public class InventoryController {
 
     @Autowired
@@ -45,7 +45,7 @@ public class InventoryController {
         }
     }
 
-    @GetMapping("/user/inventories")
+    @GetMapping("/all")
     public ResponseEntity<?> getAllInventory(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
