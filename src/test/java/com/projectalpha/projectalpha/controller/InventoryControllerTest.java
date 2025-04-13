@@ -166,7 +166,7 @@ class InventoryControllerTest {
     void updateInventory_Success() {
         String sku = "SKU123";
         InventoryResponseDTO responseDTO = InventoryResponseDTO.builder().sku(sku).make("toyota").vin(12367L).build();
-        UpdateDTO dto = new UpdateDTO();
+        InventoryRequestDTO dto = new InventoryRequestDTO();
         dto.setMake("Maruti");
         dto.setModel("first");
 
@@ -181,7 +181,7 @@ class InventoryControllerTest {
     @Test
     void updateInventory_NotFound() {
         String sku = "SKU4563";
-        UpdateDTO dto = new UpdateDTO();
+        InventoryRequestDTO dto = new InventoryRequestDTO();
         dto.setMake("Tata");
         dto.setModel("second");
 
@@ -194,7 +194,7 @@ class InventoryControllerTest {
     @Test
     void updateInventory_InternalServerError() {
         String sku = "SKU0983";
-        UpdateDTO dto = new UpdateDTO();
+        InventoryRequestDTO dto = new InventoryRequestDTO();
         dto.setMake("Mahindra");
         dto.setModel("Third");
         when(inventoryServices.updateInventoryItem(sku,dto)).thenThrow(new RuntimeException("Internal Server Error"));

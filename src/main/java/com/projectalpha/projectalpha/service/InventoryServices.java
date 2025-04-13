@@ -93,7 +93,7 @@ public class InventoryServices {
         return InventoryMapper.toResponseDTO(inventory);
     }
 
-    public InventoryResponseDTO updateInventoryItem(String sku, UpdateDTO updateDTO) {
+    public InventoryResponseDTO updateInventoryItem(String sku, InventoryRequestDTO updateDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String emailId = authentication.getName();
         UserEntity userEntity = userRepository.findByEmailId(emailId);

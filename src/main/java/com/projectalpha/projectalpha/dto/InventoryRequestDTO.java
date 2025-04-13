@@ -43,9 +43,9 @@ public class InventoryRequestDTO {
 
     @NotNull(message = "Cost price is required")
     @Positive(message = "Cost price must be positive")
-    private double costPrice;
+    private Double costPrice;
 
     @NotNull(message = "Selling price is required")
     @Positive(message = "Selling price must be positive")
-    private double sellingPrice;
+    private Double sellingPrice;
 }

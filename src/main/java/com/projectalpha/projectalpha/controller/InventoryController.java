@@ -77,7 +77,7 @@ public class InventoryController {
     }
 
     @PutMapping("/{sku}")
-    public ResponseEntity<?> update(@PathVariable String sku, @RequestBody UpdateDTO updateDTO) {
+    public ResponseEntity<?> update(@PathVariable String sku, @RequestBody InventoryRequestDTO updateDTO) {
         try {
             InventoryResponseDTO updatedItem = inventoryServices.updateInventoryItem(sku, updateDTO);
             return ResponseEntity.status(HttpStatus.OK).body(updatedItem);
