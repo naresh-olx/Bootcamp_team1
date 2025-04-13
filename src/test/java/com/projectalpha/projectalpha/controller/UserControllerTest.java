@@ -121,4 +121,19 @@ class UserControllerTest {
         assertNotNull(errorResponse);
         assertEquals("Invalid credentials",errorResponse.getErrorMessage());
     }
+
+    @Test
+    void login_InternalServerError() {
+        UserLoginDTO userLoginDTO = mockUserLoginDTO();
+
+        when(userServices.loginUser(userLoginDTO)).thenThrow(new RuntimeException("Internal Server Error"));
+        ResponseEntity<?> response = userController.login(userLoginDTO);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,response.getStatusCode());
+        ErrorResponse errorResponse = (ErrorResponse) response.getBody();
+        assertNotNull(errorResponse);
+        assertEquals("Internal Server Error",errorResponse.getErrorMessage());
+        verify(userServices,times(1)).loginUser(userLoginDTO);
+    }
 }
