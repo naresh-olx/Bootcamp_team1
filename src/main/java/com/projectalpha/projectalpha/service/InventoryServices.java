@@ -1,6 +1,5 @@
 package com.projectalpha.projectalpha.service;
 
-import com.projectalpha.projectalpha.customException.DuplicateSkuException;
 import com.projectalpha.projectalpha.dto.InventoryResponseDTO;
 import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
@@ -96,12 +95,7 @@ public class InventoryServices {
         String emailId = authentication.getName();
         UserEntity userEntity = userRepository.findByEmailId(emailId);
 
-        if(userEntity == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user doesn't exist");
-        }
-
-        String userId = userEntity.getUserId();
-        userIdAndSkuValidator(sku, userId);
+        userIdAndSkuValidator(sku);
         InventoryEntity updatedInventory = inventoryRepository.findById(sku).get();
         if(updateDTO.getVin() != null) {
             updatedInventory.setVin(updateDTO.getVin());
@@ -139,31 +133,31 @@ public class InventoryServices {
     }
 
     public InventoryResponseDTO deleteInventoryItem(String sku, String userId) {
-        userIdAndSkuValidator(sku, userId);
+        userIdAndSkuValidator(sku);
         InventoryEntity deletedInventory = inventoryRepository.findById(sku).get();
         inventoryRepository.deleteById(sku);
         return InventoryMapper.toResponseDTO(deletedInventory);
     }
 
-    private void userIdAndSkuValidator(String sku, String userId) {
+    private void userIdAndSkuValidator(String sku) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String emailId = authentication.getName();
         UserEntity userEntity = userRepository.findByEmailId(emailId);
 
         if(userEntity == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist with given Id: " + userId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist with given EmailId: " + emailId);
         }
 
         boolean skuExists = inventoryRepository.existsById(sku);
         if (!skuExists) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given Id: " + sku);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given sku: " + sku);
         }
-        boolean skuUserMatches = userEntity.getUserId().equals(userId);
+        boolean skuUserMatches = userEntity.getUserId().equals(emailId);
     }
 
     public InventoryEntity updateInventoryStatus(String sku, InventoryStatus status, String userId) {
-        userIdAndSkuValidator(sku, userId);
+        userIdAndSkuValidator(sku);
 
         InventoryEntity inventory = inventoryRepository.findById(sku)
                 .orElseThrow(() -> new ResponseStatusException(
