@@ -88,7 +88,7 @@ class InventoryControllerTest {
         InventoryResponseDTO deletedItem = InventoryResponseDTO.builder().sku(sku).make("toyota").vin(12345L).build();
         when(inventoryServices.deleteInventoryItem(sku)).thenReturn(deletedItem);
 
-        ResponseEntity<?> response = inventoryController.delete(sku);
+        ResponseEntity<?> response = inventoryController.deleteInventory(sku);
         assertEquals(OK, response.getStatusCode());
         verify(inventoryServices, times(1)).deleteInventoryItem(sku);
     }
@@ -100,7 +100,7 @@ class InventoryControllerTest {
         ResponseStatusException exception = new ResponseStatusException(NOT_FOUND, errorMessage);
 
         when(inventoryServices.deleteInventoryItem(sku)).thenThrow(exception);
-        ResponseEntity<?> response = inventoryController.delete(sku);
+        ResponseEntity<?> response = inventoryController.deleteInventory(sku);
 
         assertEquals(NOT_FOUND, response.getStatusCode());
         verify(inventoryServices, times(1)).deleteInventoryItem(sku);
@@ -110,7 +110,7 @@ class InventoryControllerTest {
     void testDelete_WhenUnexpectedException_Returns500() {
         String sku = "SKU_EXCEPTION";
         when(inventoryServices.deleteInventoryItem(sku)).thenThrow(new RuntimeException("Internal Server Error"));
-        ResponseEntity<?> response = inventoryController.delete(sku);
+        ResponseEntity<?> response = inventoryController.deleteInventory(sku);
 
         assertEquals(INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertTrue(response.getBody() instanceof ErrorResponse);

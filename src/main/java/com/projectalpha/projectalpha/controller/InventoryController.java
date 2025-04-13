@@ -89,7 +89,7 @@ public class InventoryController {
     }
 
     @DeleteMapping("/{sku}")
-    public ResponseEntity<?> delete(@PathVariable String sku) {
+    public ResponseEntity<?> deleteInventory(@PathVariable String sku) {
         try {
             InventoryResponseDTO deletedItem = inventoryServices.deleteInventoryItem(sku);
             return ResponseEntity.status(HttpStatus.OK).body(deletedItem);
