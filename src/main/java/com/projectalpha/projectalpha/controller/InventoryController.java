@@ -26,9 +26,9 @@ public class InventoryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> createInventory(@Valid @RequestBody InventoryRequestDTO inventoryEntity) {
+    public ResponseEntity<?> createInventory(@Valid @RequestBody InventoryRequestDTO inventoryRequest) {
         try {
-            InventoryResponseDTO savedItem = inventoryServices.saveInventory(inventoryEntity);
+            InventoryResponseDTO savedItem = inventoryServices.saveInventory(inventoryRequest);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedItem);
         }
         catch (IllegalArgumentException e) {
@@ -75,9 +75,11 @@ public class InventoryController {
     }
 
     @PutMapping("/{sku}")
-    public ResponseEntity<?> update(@PathVariable String sku, @RequestBody InventoryRequestDTO updateDTO) {
+    public ResponseEntity<?> update(
+            @PathVariable String sku,
+            @RequestBody InventoryRequestDTO updateRequest) {
         try {
-            InventoryResponseDTO updatedItem = inventoryServices.updateInventoryItem(sku, updateDTO);
+            InventoryResponseDTO updatedItem = inventoryServices.updateInventoryItem(sku, updateRequest);
             return ResponseEntity.status(HttpStatus.OK).body(updatedItem);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode())
