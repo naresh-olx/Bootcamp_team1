@@ -1,8 +1,10 @@
 package com.projectalpha.projectalpha.customException;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.projectalpha.projectalpha.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -43,4 +45,23 @@ public class GlobalExceptionHandler {
         ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND, "Resource not found");
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
+
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+        Throwable cause = ex.getCause();
+
+        if (cause instanceof InvalidFormatException && cause.getMessage().contains("InventoryStatus")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid inventory status value, this can be only CREATED or PROCURED or SOLD"));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid inventory status value, this can be only CREATED or PROCURED or SOLD"));
+    }
+
+
+
 }

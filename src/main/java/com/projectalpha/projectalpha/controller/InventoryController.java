@@ -6,7 +6,6 @@ import com.projectalpha.projectalpha.dto.InventoryResponseDTO;
 import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.enums.InventoryStatus;
-import com.projectalpha.projectalpha.mapper.InventoryMapper;
 import com.projectalpha.projectalpha.service.InventoryServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,7 +26,7 @@ public class InventoryController {
         return "Health is OK !! 👌🏻😎";
     }
 
-    @PostMapping("/add-inventory")
+    @PostMapping("/add")
     public ResponseEntity<?> createInventory(@RequestBody InventoryRequestDTO inventoryEntity) {
         try {
             InventoryResponseDTO savedItem = inventoryServices.saveInventory(inventoryEntity);
