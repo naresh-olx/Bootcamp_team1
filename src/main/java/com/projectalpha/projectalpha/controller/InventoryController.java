@@ -103,9 +103,11 @@ public class InventoryController {
     }
 
     @PatchMapping("/updateStatus/{sku}")
-    public ResponseEntity<?> updateStatus(@PathVariable String sku, @RequestBody InventoryRequestDTO inventoryDTO) {
+    public ResponseEntity<?> updateStatus(
+            @PathVariable String sku,
+            @RequestBody InventoryRequestDTO inventoryRequest) {
         try {
-            InventoryResponseDTO updateInventory = inventoryServices.updateInventoryStatus(sku, inventoryDTO);
+            InventoryResponseDTO updateInventory = inventoryServices.updateInventoryStatus(sku, inventoryRequest);
             return ResponseEntity.status(HttpStatus.OK).body(updateInventory);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode())
