@@ -3,6 +3,7 @@ package com.projectalpha.projectalpha.service;
 import com.projectalpha.projectalpha.customException.DuplicateSkuException;
 import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
+import com.projectalpha.projectalpha.entity.UserEntity;
 import com.projectalpha.projectalpha.repository.InventoryRepository;
 import com.projectalpha.projectalpha.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,29 +12,34 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDateTime;
 
 @Service
 public class InventoryServices {
 
     @Autowired
     private InventoryRepository inventoryRepository;
+
+    @Autowired
     UserRepository userRepository;
 
     public InventoryEntity saveInventory(InventoryEntity inventoryEntity) {
 
-        String user = inventoryEntity.getCreatedBy();
-
-        boolean userExists = userRepository.existsById(user);
-
-        if(!userExists){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User doesn't exist with ID: " + user);
-        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String emailId = authentication.getName();
+        UserEntity userEntity = userRepository.findByEmailId(emailId);
 
         if (inventoryRepository.existsById(inventoryEntity.getSku())) {
             throw new DuplicateSkuException("Inventory with SKU '" + inventoryEntity.getSku() + "' already exists.");
         }
+
+        inventoryEntity.setCreatedBy(userEntity.getUserId());
+        inventoryEntity.setCreatedAt(LocalDateTime.now());
 
         return inventoryRepository.insert(inventoryEntity);
     }
