@@ -96,6 +96,17 @@ class InventoryControllerTest {
         assertEquals(NOT_FOUND, response.getStatusCode());
         verify(inventoryServices, times(1)).deleteInventoryItem(sku,null);
     }
+
+    @Test
+    void testDelete_WhenUnexpectedException_Returns500() {
+        String sku = "SKU_EXCEPTION";
+        when(inventoryServices.deleteInventoryItem(sku, null)).thenThrow(new RuntimeException("Internal Server Error"));
+        ResponseEntity<?> response = inventoryController.delete(sku);
+
+        assertEquals(INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertTrue(response.getBody() instanceof ErrorResponse);
+        verify(inventoryServices, times(1)).deleteInventoryItem(sku,null);
+    }
 }
 
 
