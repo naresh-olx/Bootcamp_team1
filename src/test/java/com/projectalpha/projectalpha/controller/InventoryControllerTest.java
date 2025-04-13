@@ -177,6 +177,21 @@ class InventoryControllerTest {
         assertTrue(result.getBody() instanceof InventoryResponseDTO);
         verify(inventoryServices, times(1)).updateInventoryItem(sku,dto);
     }
+
+    @Test
+    void updateInventory_NotFound() {
+        String sku = "SKU4563";
+        UpdateDTO dto = new UpdateDTO();
+        dto.setMake("Tata");
+        dto.setModel("second");
+
+        when(inventoryServices.updateInventoryItem(sku,dto)).thenThrow(new ResponseStatusException(NOT_FOUND, "Item not found"));
+        ResponseEntity<?> result = inventoryController.update(sku,dto);
+        assertEquals(NOT_FOUND, result.getStatusCode());
+        verify(inventoryServices, times(1)).updateInventoryItem(sku,dto);
+    }
+
+
 }
 
 
