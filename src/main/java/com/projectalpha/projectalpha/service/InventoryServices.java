@@ -86,7 +86,8 @@ public class InventoryServices {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory not found"));
 
         if (!inventory.getCreatedBy().equals(userEntity.getUserId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to view this inventory item");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "You are not authorized to view this inventory item");
         }
         return InventoryMapper.toResponseDTO(inventory);
     }
@@ -145,7 +146,8 @@ public class InventoryServices {
         UserEntity userEntity = userRepository.findByEmailId(emailId);
 
         if(userEntity == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist with given EmailId: " + emailId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "User doesn't exist with given EmailId: " + emailId);
         }
 
         InventoryEntity inventory = inventoryRepository.findById(sku).
@@ -161,7 +163,8 @@ public class InventoryServices {
         String emailId = userIdAndSkuValidator(sku);
 
         InventoryEntity inventory = inventoryRepository.findById(sku)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given Id: " + sku));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Sku doesn't exist with given Id: " + sku));
 
         inventory.setPrimaryStatus(updateDTO.getPrimaryStatus());
         inventory.setUpdatedBy(emailId);

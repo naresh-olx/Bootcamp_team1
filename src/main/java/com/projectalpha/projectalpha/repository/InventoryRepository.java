@@ -10,7 +10,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.Optional;
 
 @Component
-public interface InventoryRepository extends MongoRepository<InventoryEntity, String>, PagingAndSortingRepository<InventoryEntity, String> {
+public interface InventoryRepository extends
+        MongoRepository<InventoryEntity, String>,
+        PagingAndSortingRepository<InventoryEntity, String> {
     Optional<InventoryEntity> findBySku(String sku);
     Page<InventoryEntity> findAllByCreatedBy(String userId, Pageable pageable);
     boolean existsByVin(Long vin);
