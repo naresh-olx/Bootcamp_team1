@@ -10,12 +10,7 @@ import com.projectalpha.projectalpha.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-<<<<<<< Updated upstream
-import org.springframework.http.HttpStatusCode;
-=======
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
->>>>>>> Stashed changes
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -31,40 +26,9 @@ public class UserServices {
     @Autowired
     private UserRepository userRepository;
 
-<<<<<<< Updated upstream
-=======
     @Autowired
     AuthenticationManager authenticationManager;
 
-    public UserResponseDTO saveUser(UserRequestDTO userDTO) {
-        try{
-
-            boolean userExists = userRepository.existsById(userDTO.getEmailId());
-
-            if(!userExists){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User doesn't exist with ID: " + userDTO.getEmailId());
-            }
-
-            UserEntity newUser = new UserEntity();
-            newUser.setUserName(userDTO.getUserName());
-            newUser.setEmailId(userDTO.getEmailId());
-            newUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-            UserEntity createdUser =  userRepository.save(newUser);
-
-            UserResponseDTO saveUser = new UserResponseDTO();
-            saveUser.setEmailId(createdUser.getEmailId());
-            saveUser.setUserName(createdUser.getUserName());
-            saveUser.setUserId(createdUser.getUserId());
-
-            return saveUser;
-
-        } catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User doesn't exist with ID: " + userDTO);
-        }
-
-    }
-
->>>>>>> Stashed changes
     public UserResponseDTO getUserById(String userId) {
         return null;
     }
