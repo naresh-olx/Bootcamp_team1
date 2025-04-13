@@ -1,15 +1,23 @@
 package com.projectalpha.projectalpha.service;
 
+import com.projectalpha.projectalpha.dto.UserLoginDTO;
 import com.projectalpha.projectalpha.dto.UserRequestDTO;
 import com.projectalpha.projectalpha.dto.UserResponseDTO;
 import com.projectalpha.projectalpha.entity.UserEntity;
 import com.projectalpha.projectalpha.mapper.UserMapper;
 import com.projectalpha.projectalpha.repository.UserRepository;
+import com.projectalpha.projectalpha.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,6 +34,15 @@ class UserServicesTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    AuthenticationManager authenticationManager;
+
+    @Mock
+    UserDetailsService userDetailsService;
+
+    @Mock
+    private JwtUtil jwtUtil;
 
     @BeforeEach
     void setUp() {
@@ -89,6 +106,26 @@ class UserServicesTest {
         assertEquals("Encoding failed", ex.getMessage());
         verify(userRepository).existsByEmailId(request.getEmailId());
         verify(passwordEncoder).encode(any());
+    }
+
+    private UserLoginDTO getValidLoginDTO() {
+        UserLoginDTO dto = new UserLoginDTO();
+        dto.setEmailId("yash@example.com");
+        dto.setPassword("password123");
+        return dto;
+    }
+
+    @Test
+    void loginUser_UserDoesNotExist_ThrowsBadRequest() {
+        UserLoginDTO loginDTO = getValidLoginDTO();
+
+        when(userRepository.existsByEmailId(loginDTO.getEmailId())).thenReturn(false);
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+                () -> userServices.loginUser(loginDTO));
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+        assertEquals("User doesn't exist with EmailId: yash@example.com", exception.getReason());
     }
 
 }
