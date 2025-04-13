@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -46,7 +47,7 @@ public class UserServices {
 
     public UserResponseDTO registerUser(@Valid UserRequestDTO userDTO) {
 
-        if(userRepository.existsByEmailId(userDTO.getEmailId())) {
+        if (userRepository.existsByEmailId(userDTO.getEmailId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
 
@@ -59,18 +60,23 @@ public class UserServices {
 
     public String loginUser(@Valid UserLoginDTO user) {
 
-        if(!userRepository.existsByEmailId(user.getEmailId())) {
+        if (!userRepository.existsByEmailId(user.getEmailId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User doesn't exist with EmailId: " + user.getEmailId());
         }
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getEmailId(), user.getPassword())
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getEmailId(), user.getPassword())
+            );
+        } catch (BadCredentialsException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect password");
+        }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmailId());
 
         String token = jwtUtil.generateToken(userDetails.getUsername());
 
         return token;
+
     }
 }
