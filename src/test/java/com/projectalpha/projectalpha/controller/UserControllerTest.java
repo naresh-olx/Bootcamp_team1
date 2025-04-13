@@ -1,5 +1,6 @@
 package com.projectalpha.projectalpha.controller;
 
+import com.projectalpha.projectalpha.dto.ErrorResponse;
 import com.projectalpha.projectalpha.dto.UserRequestDTO;
 import com.projectalpha.projectalpha.dto.UserResponseDTO;
 import com.projectalpha.projectalpha.service.UserServices;
@@ -8,7 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -53,6 +56,19 @@ class UserControllerTest {
         assertNotNull(response.getBody());
         assertEquals(OK,response.getStatusCode());
         assertEquals(userResponseDTO, response.getBody());
+        verify(userServices,times(1)).registerUser(userRequestDTO);
+    }
+
+    @Test
+    void createUser_EmailAlreadyExist() {
+        UserRequestDTO userRequestDTO = mockRequestDTO();
+
+        when(userServices.registerUser(userRequestDTO)).thenThrow(new ResponseStatusException(HttpStatus.CONFLICT,"Email already exist"));
+        ResponseEntity<?> response = userController.createUser(userRequestDTO);
+
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.CONFLICT,response.getStatusCode());
         verify(userServices,times(1)).registerUser(userRequestDTO);
     }
 }
