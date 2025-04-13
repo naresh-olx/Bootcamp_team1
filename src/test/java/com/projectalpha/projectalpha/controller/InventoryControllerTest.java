@@ -2,6 +2,7 @@ package com.projectalpha.projectalpha.controller;
 
 import com.projectalpha.projectalpha.dto.ErrorResponse;
 import com.projectalpha.projectalpha.dto.InventoryResponseDTO;
+import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.service.InventoryServices;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,7 @@ class InventoryControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    // GetBySku Method Tests
     @Test
     void testGetBySku_Success() {
         String sku = "SKU123";
@@ -79,6 +81,8 @@ class InventoryControllerTest {
         verify(inventoryServices, times(1)).getInventoryBySku(sku);
     }
 
+
+    // Delete-By-Sku Method test
     @Test
     void testDelete_WhenSkuExists_ReturnsDeleteItem() {
         String sku = "SKU123";
@@ -114,6 +118,7 @@ class InventoryControllerTest {
         verify(inventoryServices, times(1)).deleteInventoryItem(sku);
     }
 
+    // Get-All-Inventory test method
     @Test
     void testGetAllInventory_Success() {
         int page = 0;
@@ -154,6 +159,23 @@ class InventoryControllerTest {
         assertTrue(response.getBody().toString().contains("Failed to fetch inventories: Database connection failed"));
 
         verify(inventoryServices, times(1)).getAllInventories(page, size);
+    }
+
+    // Update Test Methods
+    @Test
+    void updateInventory_Success() {
+        String sku = "SKU123";
+        InventoryResponseDTO responseDTO = InventoryResponseDTO.builder().sku(sku).make("toyota").vin(12367L).build();
+        UpdateDTO dto = new UpdateDTO();
+        dto.setMake("Maruti");
+        dto.setModel("first");
+
+        when(inventoryServices.updateInventoryItem(sku,dto)).thenReturn(responseDTO);
+
+        ResponseEntity<?> result = inventoryController.update(sku,dto);
+        assertEquals(OK, result.getStatusCode());
+        assertTrue(result.getBody() instanceof InventoryResponseDTO);
+        verify(inventoryServices, times(1)).updateInventoryItem(sku,dto);
     }
 }
 
