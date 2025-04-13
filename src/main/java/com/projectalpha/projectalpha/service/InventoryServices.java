@@ -2,7 +2,6 @@ package com.projectalpha.projectalpha.service;
 
 import com.projectalpha.projectalpha.dto.InventoryRequestDTO;
 import com.projectalpha.projectalpha.dto.InventoryResponseDTO;
-import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.entity.UserEntity;
 import com.projectalpha.projectalpha.enums.InventoryStatus;
