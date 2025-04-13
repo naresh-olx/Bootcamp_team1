@@ -77,6 +77,5 @@ public class UserServices {
         String token = jwtUtil.generateToken(userDetails.getUsername());
 
         return token;
-
     }
 }

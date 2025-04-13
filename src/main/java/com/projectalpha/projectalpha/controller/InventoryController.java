@@ -42,7 +42,7 @@ public class InventoryController {
         }
     }
 
-    @GetMapping("/inventories")
+    @GetMapping("/user/inventories")
     public ResponseEntity<?> getAllInventory(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size

@@ -132,7 +132,7 @@ public class InventoryServices {
         if(updateDTO.getSellingPrice() != null){
             updatedInventory.setSellingPrice(updateDTO.getSellingPrice());
         }
-        updatedInventory.setUpdatedBy(updateDTO.getUserId());
+        updatedInventory.setUpdatedBy(userEntity.getUserId());
         updatedInventory.setUpdatedAt(LocalDateTime.now());
         return inventoryRepository.save(updatedInventory);
     }
