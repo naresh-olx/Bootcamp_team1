@@ -2,6 +2,7 @@ package com.projectalpha.projectalpha.controller;
 
 
 import com.projectalpha.projectalpha.dto.ErrorResponse;
+import com.projectalpha.projectalpha.dto.UserLoginDTO;
 import com.projectalpha.projectalpha.dto.UserRequestDTO;
 import com.projectalpha.projectalpha.dto.UserResponseDTO;
 import com.projectalpha.projectalpha.service.UserServices;
@@ -36,9 +37,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody UserRequestDTO userDTO) {
+    public ResponseEntity<?> login(@Valid @RequestBody UserLoginDTO user) {
         try{
-            String JWT_Token =  userServices.loginUser(userDTO);
+            String JWT_Token =  userServices.loginUser(user);
             return ResponseEntity.status(HttpStatus.OK).body(JWT_Token);
         }catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));

@@ -1,16 +1,20 @@
 package com.projectalpha.projectalpha.service;
 
-import com.projectalpha.projectalpha.customException.DuplicateSkuException;
+import com.projectalpha.projectalpha.dto.UserLoginDTO;
 import com.projectalpha.projectalpha.dto.UserRequestDTO;
 import com.projectalpha.projectalpha.dto.UserResponseDTO;
 
 import com.projectalpha.projectalpha.entity.UserEntity;
 import com.projectalpha.projectalpha.mapper.UserMapper;
 import com.projectalpha.projectalpha.repository.UserRepository;
+import com.projectalpha.projectalpha.utils.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,7 +31,14 @@ public class UserServices {
     private UserRepository userRepository;
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
 
     public UserResponseDTO getUserById(String userId) {
         return null;
@@ -46,12 +57,20 @@ public class UserServices {
         return UserMapper.toResponse(saved);
     }
 
-    public String loginUser(@Valid UserRequestDTO userDTO) {
+    public String loginUser(@Valid UserLoginDTO user) {
 
-        if(!userRepository.existsByEmailId(userDTO.getEmailId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User doesn't exist with EmailId: " + userDTO.getEmailId());
+        if(!userRepository.existsByEmailId(user.getEmailId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User doesn't exist with EmailId: " + user.getEmailId());
         }
 
-        return null;
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmailId(), user.getPassword())
+        );
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmailId());
+
+        String token = jwtUtil.generateToken(userDetails.getUsername());
+
+        return token;
     }
 }
