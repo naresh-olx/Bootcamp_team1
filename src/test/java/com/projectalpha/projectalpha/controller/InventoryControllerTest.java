@@ -8,8 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -106,6 +111,32 @@ class InventoryControllerTest {
         assertEquals(INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertTrue(response.getBody() instanceof ErrorResponse);
         verify(inventoryServices, times(1)).deleteInventoryItem(sku,null);
+    }
+
+    @Test
+    void testGetAllInventory_Success() {
+        int page = 0;
+        int size = 2;
+
+        InventoryEntity item1 = InventoryEntity.builder().sku("SKU001").make("Toyota").build();
+        InventoryEntity item2 = InventoryEntity.builder().sku("SKU002").make("Honda").build();
+
+        List<InventoryEntity> inventoryList = List.of(item1, item2);
+        Page<InventoryEntity> mockPage = new PageImpl<>(inventoryList, PageRequest.of(page, size), inventoryList.size());
+
+        when(inventoryServices.getAllInventories(page, size)).thenReturn(mockPage);
+
+        ResponseEntity<?> response = inventoryController.getAllInventory(page, size);
+
+        assertEquals(OK, response.getStatusCode());
+        assertInstanceOf(Page.class, response.getBody());
+
+        Page<?> returnedPage = (Page<?>) response.getBody();
+        assertEquals(2, returnedPage.getContent().size());
+        assertTrue(returnedPage.getContent().contains(item1));
+        assertTrue(returnedPage.getContent().contains(item2));
+
+        verify(inventoryServices, times(1)).getAllInventories(page, size);
     }
 }
 
