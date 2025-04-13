@@ -1,5 +1,6 @@
 package com.projectalpha.projectalpha.service;
 
+import com.projectalpha.projectalpha.dto.InventoryRequestDTO;
 import com.projectalpha.projectalpha.dto.InventoryResponseDTO;
 import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
@@ -30,8 +31,7 @@ public class InventoryServices {
     @Autowired
     UserRepository userRepository;
 
-    public InventoryEntity saveInventory(InventoryEntity inventoryEntity) {
-
+    public InventoryResponseDTO saveInventory(InventoryRequestDTO inventoryEntity) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String emailId = authentication.getName();
         UserEntity userEntity = userRepository.findByEmailId(emailId);
@@ -50,11 +50,13 @@ public class InventoryServices {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Inventory with this VIN already exists");
         }
 
-        inventoryEntity.setCreatedBy(userEntity.getUserId());
-        inventoryEntity.setCreatedAt(LocalDateTime.now());
-        inventoryEntity.setUpdatedAt(null);
+        InventoryEntity entityToSave = InventoryMapper.toEntity(inventoryEntity);
+        entityToSave.setCreatedBy(userEntity.getUserId());
+        entityToSave.setCreatedAt(LocalDateTime.now());
+        entityToSave.setUpdatedBy(userEntity.getUserId());
+        entityToSave.setUpdatedAt(LocalDateTime.now());
 
-        return inventoryRepository.insert(inventoryEntity);
+        return InventoryMapper.toResponseDTO(inventoryRepository.insert(entityToSave));
     }
 
     public Page<InventoryEntity> getAllInventories(int page, int size) {

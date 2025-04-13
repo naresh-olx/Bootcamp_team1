@@ -1,10 +1,12 @@
 package com.projectalpha.projectalpha.controller;
 
 import com.projectalpha.projectalpha.dto.ErrorResponse;
+import com.projectalpha.projectalpha.dto.InventoryRequestDTO;
 import com.projectalpha.projectalpha.dto.InventoryResponseDTO;
 import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.enums.InventoryStatus;
+import com.projectalpha.projectalpha.mapper.InventoryMapper;
 import com.projectalpha.projectalpha.service.InventoryServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,9 +28,9 @@ public class InventoryController {
     }
 
     @PostMapping("/inventory")
-    public ResponseEntity<?> createInventory(@RequestBody InventoryEntity inventoryEntity) {
+    public ResponseEntity<?> createInventory(@RequestBody InventoryRequestDTO inventoryEntity) {
         try {
-            InventoryEntity savedItem = inventoryServices.saveInventory(inventoryEntity);
+            InventoryResponseDTO savedItem = inventoryServices.saveInventory(inventoryEntity);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedItem);
         }
         catch (IllegalArgumentException e) {
