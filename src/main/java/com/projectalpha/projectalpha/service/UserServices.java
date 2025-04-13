@@ -10,7 +10,6 @@ import com.projectalpha.projectalpha.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -56,7 +55,7 @@ public class UserServices {
         return null;
     }
 
-    public UserResponseDTO addNewUser(@Valid UserRequestDTO userDTO) {
+    public UserResponseDTO registerUser(@Valid UserRequestDTO userDTO) {
 
         if(userRepository.existsByEmailId(userDTO.getEmailId())) {
             throw new DuplicateSkuException("Email already in use");
@@ -66,5 +65,9 @@ public class UserServices {
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         UserEntity saved = userRepository.save(userEntity);
         return UserMapper.toResponse(saved);
+    }
+
+    public String loginUser(@Valid UserRequestDTO userDTO) {
+        return null;
     }
 }
