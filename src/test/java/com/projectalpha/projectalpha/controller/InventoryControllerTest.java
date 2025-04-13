@@ -191,7 +191,20 @@ class InventoryControllerTest {
         verify(inventoryServices, times(1)).updateInventoryItem(sku,dto);
     }
 
+    @Test
+    void updateInventory_InternalServerError() {
+        String sku = "SKU0983";
+        UpdateDTO dto = new UpdateDTO();
+        dto.setMake("Mahindra");
+        dto.setModel("Third");
+        when(inventoryServices.updateInventoryItem(sku,dto)).thenThrow(new RuntimeException("Internal Server Error"));
+        ResponseEntity<?> result = inventoryController.update(sku,dto);
 
+        assertEquals(INTERNAL_SERVER_ERROR, result.getStatusCode());
+        ErrorResponse errorResponse = (ErrorResponse) result.getBody();
+        assertEquals("Internal Server Error",errorResponse.getErrorMessage());
+        verify(inventoryServices, times(1)).updateInventoryItem(sku,dto);
+    }
 }
 
 
