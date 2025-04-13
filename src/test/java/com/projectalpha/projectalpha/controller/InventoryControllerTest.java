@@ -1,6 +1,7 @@
 package com.projectalpha.projectalpha.controller;
 
 import com.projectalpha.projectalpha.dto.ErrorResponse;
+import com.projectalpha.projectalpha.dto.InventoryRequestDTO;
 import com.projectalpha.projectalpha.dto.InventoryResponseDTO;
 import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
@@ -249,6 +250,36 @@ class InventoryControllerTest {
         ErrorResponse errorResponse = (ErrorResponse) result.getBody();
         assertEquals("Internal Server Error",errorResponse.getErrorMessage());
         verify(inventoryServices, times(1)).updateInventoryStatus(sku,status,userId);
+    }
+
+
+    // Create Inventory Test
+    private InventoryRequestDTO getInventoryRequestDTO() {
+        InventoryRequestDTO dto = new InventoryRequestDTO();
+        dto.setMake("Mahindra");
+        dto.setModel("Third");
+        return dto;
+    }
+
+    private InventoryResponseDTO getInventoryResponseDTO() {
+        InventoryResponseDTO dto = new InventoryResponseDTO();
+        dto.setMake("Thar");
+        dto.setModel("Fourth");
+        return dto;
+    }
+
+    @Test
+    void createInventory_Success() {
+        InventoryRequestDTO requestDTO = getInventoryRequestDTO();
+        InventoryResponseDTO responseDTO = new InventoryResponseDTO();
+
+        when(inventoryServices.saveInventory(requestDTO)).thenReturn(responseDTO);
+        ResponseEntity<?> result = inventoryController.createInventory(requestDTO);
+
+        assertEquals(CREATED, result.getStatusCode());
+        assertTrue(result.getBody() instanceof InventoryResponseDTO);
+        assertEquals(responseDTO,(InventoryResponseDTO) result.getBody());
+        verify(inventoryServices, times(1)).saveInventory(requestDTO);
     }
 }
 
