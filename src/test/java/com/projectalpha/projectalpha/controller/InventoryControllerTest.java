@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -293,6 +294,21 @@ class InventoryControllerTest {
         assertTrue(result.getBody() instanceof ErrorResponse);
         ErrorResponse errorResponse = (ErrorResponse) result.getBody();
         assertEquals("Invalid input",errorResponse.getErrorMessage());
+        verify(inventoryServices, times(1)).saveInventory(requestDTO);
+    }
+
+    @Test
+    void createInventory_ThrowsResponseStatusException() {
+        InventoryRequestDTO requestDTO = getInventoryRequestDTO();
+
+        when(inventoryServices.saveInventory(requestDTO)).thenThrow(new ResponseStatusException(HttpStatus.CONFLICT, "Item already exists"));
+
+        ResponseEntity<?> result = inventoryController.createInventory(requestDTO);
+
+        assertEquals(CONFLICT, result.getStatusCode());
+        assertTrue(result.getBody() instanceof ErrorResponse);
+        ErrorResponse errorResponse = (ErrorResponse) result.getBody();
+        assertEquals("Item already exists",errorResponse.getErrorMessage());
         verify(inventoryServices, times(1)).saveInventory(requestDTO);
     }
 }
