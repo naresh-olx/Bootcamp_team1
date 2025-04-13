@@ -72,6 +72,17 @@ class InventoryControllerTest {
         assertEquals("Failed to fetch Item: Internal Server Error",response.getBody().toString());
         verify(inventoryServices, times(1)).getInventoryBySku(sku);
     }
+
+    @Test
+    void testDelete_WhenSkuExists_ReturnsDeleteItem() {
+        String sku = "SKU123";
+        InventoryEntity deletedItem = InventoryEntity.builder().sku(sku).make("toyota").vin(12345L).build();
+        when(inventoryServices.deleteInventoryItem(sku,null)).thenReturn(deletedItem);
+
+        ResponseEntity<?> response = inventoryController.delete(sku);
+        assertEquals(OK, response.getStatusCode());
+        verify(inventoryServices, times(1)).deleteInventoryItem(sku,null);
+    }
 }
 
 
