@@ -45,7 +45,7 @@ public class UserServices {
 
     public String loginUser(@Valid UserRequestDTO userDTO) {
 
-        if(userRepository.existsByEmailId(userDTO.getEmailId())) {
+        if(!userRepository.existsByEmailId(userDTO.getEmailId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User doesn't exist with EmailId: " + userDTO.getEmailId());
         }
 
