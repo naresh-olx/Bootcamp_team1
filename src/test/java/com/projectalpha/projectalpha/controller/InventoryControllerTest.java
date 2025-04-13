@@ -83,6 +83,19 @@ class InventoryControllerTest {
         assertEquals(OK, response.getStatusCode());
         verify(inventoryServices, times(1)).deleteInventoryItem(sku,null);
     }
+
+    @Test
+    void testDelete_WhenSkuDoesNotExist_Returns404() {
+        String sku = "SKU_NOT_EXIST";
+        String errorMessage = "Item not found";
+        ResponseStatusException exception = new ResponseStatusException(NOT_FOUND, errorMessage);
+
+        when(inventoryServices.deleteInventoryItem(sku,null)).thenThrow(exception);
+        ResponseEntity<?> response = inventoryController.delete(sku);
+
+        assertEquals(NOT_FOUND, response.getStatusCode());
+        verify(inventoryServices, times(1)).deleteInventoryItem(sku,null);
+    }
 }
 
 
