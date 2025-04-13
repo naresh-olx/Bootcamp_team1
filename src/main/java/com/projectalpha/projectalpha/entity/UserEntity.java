@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Document(collection = "users")
 @Data
