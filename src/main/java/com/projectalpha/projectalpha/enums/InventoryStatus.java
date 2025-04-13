@@ -16,7 +16,7 @@ public enum InventoryStatus {
     @JsonCreator
     public static InventoryStatus fromValue(String value) {
         for (InventoryStatus status : InventoryStatus.values()) {
-            if (status.name().equals(value)) {
+            if (status.name().equalsIgnoreCase(value)) {
                 return status;
             }
         }
