@@ -32,8 +32,8 @@ public class UserController {
         try{
             UserResponseDTO saveUser =  userServices.saveUser(userDTO);
             return ResponseEntity.status(HttpStatus.OK).body(saveUser);
-        }catch (DuplicateSkuException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(HttpStatus.CONFLICT, e.getMessage()));
+        }catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
         }
