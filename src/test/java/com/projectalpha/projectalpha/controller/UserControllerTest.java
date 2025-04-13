@@ -107,4 +107,18 @@ class UserControllerTest {
         assertEquals(token, response.getBody());
         verify(userServices,times(1)).loginUser(userLoginDTO);
     }
+
+    @Test
+    void  login_InvalidCredentials() {
+        UserLoginDTO userLoginDTO = mockUserLoginDTO();
+
+        when(userServices.loginUser(userLoginDTO)).thenThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Invalid credentials"));
+        ResponseEntity<?> response = userController.login(userLoginDTO);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.UNAUTHORIZED,response.getStatusCode());
+        ErrorResponse errorResponse = (ErrorResponse) response.getBody();
+        assertNotNull(errorResponse);
+        assertEquals("Invalid credentials",errorResponse.getErrorMessage());
+    }
 }
