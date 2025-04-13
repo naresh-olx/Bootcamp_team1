@@ -4,6 +4,7 @@ import com.projectalpha.projectalpha.dto.ErrorResponse;
 import com.projectalpha.projectalpha.dto.InventoryResponseDTO;
 import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
+import com.projectalpha.projectalpha.enums.InventoryStatus;
 import com.projectalpha.projectalpha.service.InventoryServices;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -204,6 +205,24 @@ class InventoryControllerTest {
         ErrorResponse errorResponse = (ErrorResponse) result.getBody();
         assertEquals("Internal Server Error",errorResponse.getErrorMessage());
         verify(inventoryServices, times(1)).updateInventoryItem(sku,dto);
+    }
+
+    // Update-Status Test Method
+    @Test
+    void updateStatus_Success() {
+        String sku = "SKU123";
+        InventoryStatus status = InventoryStatus.SOLD;
+        String userId = "user123";
+
+        InventoryEntity item = InventoryEntity.builder().sku(sku).make("Toyota").build();
+        when(inventoryServices.updateInventoryStatus(sku,status,userId)).thenReturn(item);
+        ResponseEntity<?> result = inventoryController.updateStatus(sku,status,userId);
+
+        assertEquals(OK, result.getStatusCode());
+        assertTrue(result.getBody() instanceof InventoryEntity);
+        InventoryEntity body = (InventoryEntity) result.getBody();
+        assertEquals(sku,body.getSku());
+        verify(inventoryServices, times(1)).updateInventoryStatus(sku,status,userId);
     }
 }
 
