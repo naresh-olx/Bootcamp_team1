@@ -224,6 +224,21 @@ class InventoryControllerTest {
         assertEquals(sku,body.getSku());
         verify(inventoryServices, times(1)).updateInventoryStatus(sku,status,userId);
     }
+
+    @Test
+    void updateStatus_NotFound() {
+        String sku = "SKU404";
+        InventoryStatus status = InventoryStatus.SOLD;
+        String userId = "user435";
+
+        when(inventoryServices.updateInventoryStatus(sku,status,userId)).thenThrow(new ResponseStatusException(NOT_FOUND, "Item not found"));
+        ResponseEntity<?> result = inventoryController.updateStatus(sku,status,userId);
+
+        assertEquals(NOT_FOUND, result.getStatusCode());
+        ErrorResponse errorResponse = (ErrorResponse) result.getBody();
+        assertEquals("Item not found",errorResponse.getErrorMessage());
+        verify(inventoryServices, times(1)).updateInventoryStatus(sku,status,userId);
+    }
 }
 
 
