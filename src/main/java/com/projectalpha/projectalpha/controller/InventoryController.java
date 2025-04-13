@@ -7,10 +7,10 @@ import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.enums.InventoryStatus;
 import com.projectalpha.projectalpha.service.InventoryServices;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,7 +28,7 @@ public class InventoryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> createInventory(@RequestBody InventoryRequestDTO inventoryEntity) {
+    public ResponseEntity<?> createInventory(@Valid @RequestBody InventoryRequestDTO inventoryEntity) {
         try {
             InventoryResponseDTO savedItem = inventoryServices.saveInventory(inventoryEntity);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedItem);

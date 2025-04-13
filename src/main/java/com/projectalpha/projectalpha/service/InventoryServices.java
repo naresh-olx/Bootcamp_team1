@@ -9,6 +9,7 @@ import com.projectalpha.projectalpha.enums.InventoryStatus;
 import com.projectalpha.projectalpha.mapper.InventoryMapper;
 import com.projectalpha.projectalpha.repository.InventoryRepository;
 import com.projectalpha.projectalpha.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +32,7 @@ public class InventoryServices {
     @Autowired
     UserRepository userRepository;
 
-    public InventoryResponseDTO saveInventory(InventoryRequestDTO inventoryEntity) {
+    public InventoryResponseDTO saveInventory(@Valid InventoryRequestDTO inventoryEntity) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String emailId = authentication.getName();
         UserEntity userEntity = userRepository.findByEmailId(emailId);
