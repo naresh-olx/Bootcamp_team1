@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -58,6 +59,21 @@ class UserServicesTest {
         verify(userRepository).existsByEmailId(request.getEmailId());
         verify(userRepository).save(any(UserEntity.class));
         verify(passwordEncoder).encode(request.getPassword());
+    }
+
+    @Test
+    void registerUser_EmailAlreadyExists_ThrowsException() {
+        UserRequestDTO request = getSampleRequestDTO();
+
+        when(userRepository.existsByEmailId(request.getEmailId())).thenReturn(true);
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> userServices.registerUser(request));
+
+        assertEquals("409 CONFLICT \"Email already in use\"", ex.getMessage());
+        verify(userRepository).existsByEmailId(request.getEmailId());
+        verify(userRepository, never()).save(any());
+        verify(passwordEncoder, never()).encode(any());
     }
 
 }
