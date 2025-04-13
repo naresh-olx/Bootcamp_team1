@@ -20,7 +20,7 @@ import java.util.UUID;
 public class UserEntity {
 
     @Id
-    private String userId = UUID.randomUUID().toString().split("-")[0];
+    private String userId;
 
     private String userName;
 

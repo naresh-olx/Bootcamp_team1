@@ -4,9 +4,12 @@ import com.projectalpha.projectalpha.dto.UserRequestDTO;
 import com.projectalpha.projectalpha.dto.UserResponseDTO;
 import com.projectalpha.projectalpha.entity.UserEntity;
 
+import java.util.UUID;
+
 public class UserMapper {
     public static UserEntity toEntity(UserRequestDTO dto) {
         return UserEntity.builder()
+                .userId(UUID.randomUUID().toString().split("-")[0])
                 .userName(dto.getUserName())
                 .emailId(dto.getEmailId())
                 .password(dto.getPassword())

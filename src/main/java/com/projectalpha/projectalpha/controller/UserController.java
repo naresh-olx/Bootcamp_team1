@@ -9,6 +9,7 @@ import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.entity.UserEntity;
 import com.projectalpha.projectalpha.service.InventoryServices;
 import com.projectalpha.projectalpha.service.UserServices;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -28,9 +29,9 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> createUser(@RequestBody UserRequestDTO userDTO) {
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserRequestDTO userDTO) {
         try{
-            UserResponseDTO saveUser =  userServices.saveUser(userDTO);
+            UserResponseDTO saveUser =  userServices.addNewUser(userDTO);
             return ResponseEntity.status(HttpStatus.OK).body(saveUser);
         }catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));
