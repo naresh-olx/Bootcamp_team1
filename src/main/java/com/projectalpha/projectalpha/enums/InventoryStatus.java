@@ -2,6 +2,8 @@ package com.projectalpha.projectalpha.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 public enum InventoryStatus {
     CREATED,
@@ -20,6 +22,6 @@ public enum InventoryStatus {
                 return status;
             }
         }
-        throw new IllegalArgumentException("Invalid status: " + value);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid inventory status value, this can be only CREATED or PROCURED or SOLD");
     }
 }
