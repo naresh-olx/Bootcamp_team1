@@ -1,11 +1,13 @@
 package com.projectalpha.projectalpha.entity;
 
+import com.projectalpha.projectalpha.enums.InventoryStatus;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,7 +22,7 @@ public class InventoryEntity {
     private String sku = UUID.randomUUID().toString().split("-")[0];
 
     private String type;
-    private String primaryStatus;
+    private InventoryStatus primaryStatus;
     private String primaryLocation;
 
     @Indexed(unique = true)

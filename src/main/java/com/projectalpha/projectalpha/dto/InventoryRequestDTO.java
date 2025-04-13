@@ -1,5 +1,6 @@
 package com.projectalpha.projectalpha.dto;
 
+import com.projectalpha.projectalpha.enums.InventoryStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -7,8 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 
 @Data
@@ -21,7 +20,7 @@ public class InventoryRequestDTO {
     private String type;
 
     @NotBlank(message = "Primary status is required")
-    private String primaryStatus;
+    private InventoryStatus primaryStatus;
 
     @NotBlank(message = "Primary location is required")
     private String primaryLocation;

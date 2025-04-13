@@ -1,5 +1,6 @@
 package com.projectalpha.projectalpha.dto;
 
+import com.projectalpha.projectalpha.enums.InventoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,15 +16,15 @@ import java.util.Date;
 public class InventoryResponseDTO {
     private String sku;
     private String type;
-    private String primaryStatus;
+    private InventoryStatus primaryStatus;
     private String primaryLocation;
     private Long vin;
     private String make;
     private String model;
     private String year;
     private String trim;
-    private double costPrice;
-    private double sellingPrice;
+    private Double costPrice;
+    private Double sellingPrice;
 
     private String  createdBy;
     private LocalDateTime createdAt;
