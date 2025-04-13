@@ -76,4 +76,19 @@ class UserServicesTest {
         verify(passwordEncoder, never()).encode(any());
     }
 
+    @Test
+    void registerUser_InternalError_ThrowsException() {
+        UserRequestDTO request = getSampleRequestDTO();
+
+        when(userRepository.existsByEmailId(request.getEmailId())).thenReturn(false);
+        when(passwordEncoder.encode(any())).thenThrow(new RuntimeException("Encoding failed"));
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> userServices.registerUser(request));
+
+        assertEquals("Encoding failed", ex.getMessage());
+        verify(userRepository).existsByEmailId(request.getEmailId());
+        verify(passwordEncoder).encode(any());
+    }
+
 }
