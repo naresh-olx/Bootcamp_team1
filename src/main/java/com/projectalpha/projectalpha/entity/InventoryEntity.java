@@ -40,6 +40,5 @@ public class InventoryEntity {
 
     private String updatedBy;
 
-    @LastModifiedDate
     private LocalDateTime updatedAt;
 }

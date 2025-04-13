@@ -44,6 +44,7 @@ public class InventoryServices {
 
         inventoryEntity.setCreatedBy(userEntity.getUserId());
         inventoryEntity.setCreatedAt(LocalDateTime.now());
+        inventoryEntity.setUpdatedAt(null);
 
         return inventoryRepository.insert(inventoryEntity);
     }
@@ -54,7 +55,23 @@ public class InventoryServices {
     }
 
     public InventoryEntity getInventoryBySku(String sku) {
-        return inventoryRepository.findBySku(sku).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String emailId = authentication.getName();
+        UserEntity userEntity = userRepository.findByEmailId(emailId);
+
+        if(userEntity == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user doesn't exist");
+        }
+
+        InventoryEntity inventory = inventoryRepository.findBySku(sku)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory not found"));
+
+        if (!inventory.getCreatedBy().equals(userEntity.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to view this inventory item");
+        }
+        return inventory;
+//        return inventoryRepository.findBySku(sku).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     public InventoryEntity updateInventoryItem(String sku, UpdateDTO updateDTO) {
@@ -100,6 +117,7 @@ public class InventoryServices {
             updatedInventory.setSellingPrice(updateDTO.getSellingPrice());
         }
         updatedInventory.setUpdatedBy(updateDTO.getUserId());
+        updatedInventory.setUpdatedAt(LocalDateTime.now());
         return inventoryRepository.save(updatedInventory);
     }
 
