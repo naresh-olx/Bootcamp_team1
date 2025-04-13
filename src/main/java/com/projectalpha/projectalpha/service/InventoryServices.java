@@ -73,7 +73,7 @@ public class InventoryServices {
         return inventoryRepository.findAllByCreatedBy(userEntity.getUserId(), pageable);
     }
 
-    public InventoryEntity getInventoryBySku(String sku) {
+    public InventoryResponseDTO getInventoryBySku(String sku) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String emailId = authentication.getName();
@@ -89,7 +89,7 @@ public class InventoryServices {
         if (!inventory.getCreatedBy().equals(userEntity.getUserId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to view this inventory item");
         }
-        return inventory;
+        return InventoryMapper.toResponseDTO(inventory);
     }
 
     public InventoryResponseDTO updateInventoryItem(String sku, UpdateDTO updateDTO) {

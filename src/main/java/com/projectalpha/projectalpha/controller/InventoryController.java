@@ -61,8 +61,8 @@ public class InventoryController {
     @GetMapping("/{sku}")
     public ResponseEntity<?> getBySku(@PathVariable String sku) {
         try {
-            InventoryEntity item = inventoryServices.getInventoryBySku(sku);
-            return ResponseEntity.ok(item);
+            InventoryResponseDTO item = inventoryServices.getInventoryBySku(sku);
+            return ResponseEntity.status(HttpStatus.OK).body(item);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));
         } catch (Exception e) {
