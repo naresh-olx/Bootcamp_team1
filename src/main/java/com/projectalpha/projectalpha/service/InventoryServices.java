@@ -4,6 +4,7 @@ import com.projectalpha.projectalpha.customException.DuplicateSkuException;
 import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.entity.UserEntity;
+import com.projectalpha.projectalpha.enums.InventoryStatus;
 import com.projectalpha.projectalpha.repository.InventoryRepository;
 import com.projectalpha.projectalpha.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,7 +148,7 @@ public class InventoryServices {
         }
     }
 
-    public InventoryEntity updateInventoryStatus(String sku, String status, String userId) {
+    public InventoryEntity updateInventoryStatus(String sku, InventoryStatus status, String userId) {
         userIdAndSkuValidator(sku, userId);
 
         InventoryEntity inventory = inventoryRepository.findById(sku)

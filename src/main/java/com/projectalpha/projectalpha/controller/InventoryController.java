@@ -4,6 +4,7 @@ import com.projectalpha.projectalpha.customException.DuplicateSkuException;
 import com.projectalpha.projectalpha.dto.ErrorResponse;
 import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
+import com.projectalpha.projectalpha.enums.InventoryStatus;
 import com.projectalpha.projectalpha.service.InventoryServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -89,7 +90,7 @@ public class InventoryController {
 
     @PatchMapping("/updateStatus/{sku}")
     public ResponseEntity<?> updateStatus(@PathVariable String sku,
-                                          @RequestParam String status,
+                                          @RequestParam InventoryStatus status,
                                           @RequestParam String userId) {
         try{
             InventoryEntity updateInventory = inventoryServices.updateInventoryStatus(sku, status, userId);
