@@ -239,6 +239,21 @@ class InventoryControllerTest {
         assertEquals("Item not found",errorResponse.getErrorMessage());
         verify(inventoryServices, times(1)).updateInventoryStatus(sku,status,userId);
     }
+
+    @Test
+    void updateStatus_InternalServerError() {
+        String sku = "SKU500";
+        InventoryStatus status = InventoryStatus.SOLD;
+        String userId = "user867";
+
+        when(inventoryServices.updateInventoryStatus(sku,status,userId)).thenThrow(new RuntimeException("Internal Server Error"));
+        ResponseEntity<?> result = inventoryController.updateStatus(sku,status,userId);
+
+        assertEquals(INTERNAL_SERVER_ERROR, result.getStatusCode());
+        ErrorResponse errorResponse = (ErrorResponse) result.getBody();
+        assertEquals("Internal Server Error",errorResponse.getErrorMessage());
+        verify(inventoryServices, times(1)).updateInventoryStatus(sku,status,userId);
+    }
 }
 
 
