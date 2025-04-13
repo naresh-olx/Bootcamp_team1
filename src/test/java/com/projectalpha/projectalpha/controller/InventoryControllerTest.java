@@ -83,11 +83,11 @@ class InventoryControllerTest {
     void testDelete_WhenSkuExists_ReturnsDeleteItem() {
         String sku = "SKU123";
         InventoryResponseDTO deletedItem = InventoryResponseDTO.builder().sku(sku).make("toyota").vin(12345L).build();
-        when(inventoryServices.deleteInventoryItem(sku,null)).thenReturn(deletedItem);
+        when(inventoryServices.deleteInventoryItem(sku)).thenReturn(deletedItem);
 
         ResponseEntity<?> response = inventoryController.delete(sku);
         assertEquals(OK, response.getStatusCode());
-        verify(inventoryServices, times(1)).deleteInventoryItem(sku,null);
+        verify(inventoryServices, times(1)).deleteInventoryItem(sku);
     }
 
     @Test
@@ -96,22 +96,22 @@ class InventoryControllerTest {
         String errorMessage = "Item not found";
         ResponseStatusException exception = new ResponseStatusException(NOT_FOUND, errorMessage);
 
-        when(inventoryServices.deleteInventoryItem(sku,null)).thenThrow(exception);
+        when(inventoryServices.deleteInventoryItem(sku)).thenThrow(exception);
         ResponseEntity<?> response = inventoryController.delete(sku);
 
         assertEquals(NOT_FOUND, response.getStatusCode());
-        verify(inventoryServices, times(1)).deleteInventoryItem(sku,null);
+        verify(inventoryServices, times(1)).deleteInventoryItem(sku);
     }
 
     @Test
     void testDelete_WhenUnexpectedException_Returns500() {
         String sku = "SKU_EXCEPTION";
-        when(inventoryServices.deleteInventoryItem(sku, null)).thenThrow(new RuntimeException("Internal Server Error"));
+        when(inventoryServices.deleteInventoryItem(sku)).thenThrow(new RuntimeException("Internal Server Error"));
         ResponseEntity<?> response = inventoryController.delete(sku);
 
         assertEquals(INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertTrue(response.getBody() instanceof ErrorResponse);
-        verify(inventoryServices, times(1)).deleteInventoryItem(sku,null);
+        verify(inventoryServices, times(1)).deleteInventoryItem(sku);
     }
 
     @Test

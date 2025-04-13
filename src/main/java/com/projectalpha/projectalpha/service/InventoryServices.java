@@ -132,7 +132,7 @@ public class InventoryServices {
         return InventoryMapper.toResponseDTO(inventoryRepository.save(updatedInventory));
     }
 
-    public InventoryResponseDTO deleteInventoryItem(String sku, String userId) {
+    public InventoryResponseDTO deleteInventoryItem(String sku) {
         userIdAndSkuValidator(sku);
         InventoryEntity deletedInventory = inventoryRepository.findById(sku).get();
         inventoryRepository.deleteById(sku);
