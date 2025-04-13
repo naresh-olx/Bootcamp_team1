@@ -87,6 +87,17 @@ public class InventoryController {
         }
     }
 
-
-
+    @PatchMapping("/updateStatus/{id}")
+    public ResponseEntity<?> updateStatus(@PathVariable String id,
+                                          @RequestParam String status,
+                                          @RequestParam String userId) {
+        try{
+            InventoryEntity updateInventory = inventoryServices.updateInventoryStatus(id, status, userId);
+            return ResponseEntity.ok(updateInventory);
+        }catch (ResponseStatusException e){
+            return ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
+        }
+    }
 }
