@@ -1,6 +1,7 @@
 package com.projectalpha.projectalpha.controller;
 
 import com.projectalpha.projectalpha.dto.ErrorResponse;
+import com.projectalpha.projectalpha.dto.InventoryResponseDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.service.InventoryServices;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,7 +82,7 @@ class InventoryControllerTest {
     @Test
     void testDelete_WhenSkuExists_ReturnsDeleteItem() {
         String sku = "SKU123";
-        InventoryEntity deletedItem = InventoryEntity.builder().sku(sku).make("toyota").vin(12345L).build();
+        InventoryResponseDTO deletedItem = InventoryResponseDTO.builder().sku(sku).make("toyota").vin(12345L).build();
         when(inventoryServices.deleteInventoryItem(sku,null)).thenReturn(deletedItem);
 
         ResponseEntity<?> response = inventoryController.delete(sku);

@@ -2,6 +2,7 @@ package com.projectalpha.projectalpha.controller;
 
 import com.projectalpha.projectalpha.customException.DuplicateSkuException;
 import com.projectalpha.projectalpha.dto.ErrorResponse;
+import com.projectalpha.projectalpha.dto.InventoryResponseDTO;
 import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.enums.InventoryStatus;
@@ -71,7 +72,7 @@ public class InventoryController {
     @PutMapping("/{sku}")
     public ResponseEntity<?> update(@PathVariable String sku, @RequestBody UpdateDTO updateDTO) {
         try {
-            InventoryEntity updatedItem = inventoryServices.updateInventoryItem(sku, updateDTO);
+            InventoryResponseDTO updatedItem = inventoryServices.updateInventoryItem(sku, updateDTO);
             return ResponseEntity.status(HttpStatus.OK).body(updatedItem);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));
@@ -83,7 +84,7 @@ public class InventoryController {
     @DeleteMapping("/{sku}")
     public ResponseEntity<?> delete(@PathVariable String sku) {
         try {
-            InventoryEntity deletedItem = inventoryServices.deleteInventoryItem(sku, null);
+            InventoryResponseDTO deletedItem = inventoryServices.deleteInventoryItem(sku, null);
             return ResponseEntity.status(HttpStatus.OK).body(deletedItem);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));

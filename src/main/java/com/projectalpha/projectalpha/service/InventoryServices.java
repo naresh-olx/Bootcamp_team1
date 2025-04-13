@@ -1,10 +1,12 @@
 package com.projectalpha.projectalpha.service;
 
 import com.projectalpha.projectalpha.customException.DuplicateSkuException;
+import com.projectalpha.projectalpha.dto.InventoryResponseDTO;
 import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.entity.UserEntity;
 import com.projectalpha.projectalpha.enums.InventoryStatus;
+import com.projectalpha.projectalpha.mapper.InventoryMapper;
 import com.projectalpha.projectalpha.repository.InventoryRepository;
 import com.projectalpha.projectalpha.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +91,7 @@ public class InventoryServices {
         return inventory;
     }
 
-    public InventoryEntity updateInventoryItem(String sku, UpdateDTO updateDTO) {
+    public InventoryResponseDTO updateInventoryItem(String sku, UpdateDTO updateDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String emailId = authentication.getName();
         UserEntity userEntity = userRepository.findByEmailId(emailId);
@@ -133,14 +135,14 @@ public class InventoryServices {
         }
         updatedInventory.setUpdatedBy(userEntity.getUserId());
         updatedInventory.setUpdatedAt(LocalDateTime.now());
-        return inventoryRepository.save(updatedInventory);
+        return InventoryMapper.toResponseDTO(inventoryRepository.save(updatedInventory));
     }
 
-    public InventoryEntity deleteInventoryItem(String sku, String userId) {
+    public InventoryResponseDTO deleteInventoryItem(String sku, String userId) {
         userIdAndSkuValidator(sku, userId);
         InventoryEntity deletedInventory = inventoryRepository.findById(sku).get();
         inventoryRepository.deleteById(sku);
-        return deletedInventory;
+        return InventoryMapper.toResponseDTO(deletedInventory);
     }
 
     private void userIdAndSkuValidator(String sku, String userId) {
