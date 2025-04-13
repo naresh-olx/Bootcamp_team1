@@ -50,8 +50,17 @@ public class InventoryServices {
     }
 
     public Page<InventoryEntity> getAllInventories(int page, int size) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String emailId = authentication.getName();
+        UserEntity userEntity = userRepository.findByEmailId(emailId);
+
+        if(userEntity == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user doesn't exist");
+        }
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        return inventoryRepository.findAll(pageable);
+        return inventoryRepository.findAllByCreatedBy(userEntity.getUserId(), pageable);
     }
 
     public InventoryEntity getInventoryBySku(String sku) {
@@ -71,7 +80,6 @@ public class InventoryServices {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to view this inventory item");
         }
         return inventory;
-//        return inventoryRepository.findBySku(sku).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     public InventoryEntity updateInventoryItem(String sku, UpdateDTO updateDTO) {
