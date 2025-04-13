@@ -40,11 +40,6 @@ public class UserServices {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-
-    public UserResponseDTO getUserById(String userId) {
-        return null;
-    }
-
     public UserResponseDTO registerUser(@Valid UserRequestDTO userDTO) {
 
         if (userRepository.existsByEmailId(userDTO.getEmailId())) {
@@ -61,7 +56,10 @@ public class UserServices {
     public String loginUser(@Valid UserLoginDTO user) {
 
         if (!userRepository.existsByEmailId(user.getEmailId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User doesn't exist with EmailId: " + user.getEmailId());
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "User doesn't exist with EmailId: " + user.getEmailId()
+            );
         }
 
         try {
@@ -74,8 +72,6 @@ public class UserServices {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmailId());
 
-        String token = jwtUtil.generateToken(userDetails.getUsername());
-
-        return token;
+        return jwtUtil.generateToken(userDetails.getUsername());
     }
 }
