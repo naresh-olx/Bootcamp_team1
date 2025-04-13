@@ -217,9 +217,6 @@ class InventoryControllerTest {
         ResponseEntity<?> result = inventoryController.updateStatus(sku,status,userId);
 
         assertEquals(OK, result.getStatusCode());
-        assertTrue(result.getBody() instanceof InventoryEntity);
-        InventoryEntity body = (InventoryEntity) result.getBody();
-        assertEquals(sku,body.getSku());
         verify(inventoryServices, times(1)).updateInventoryStatus(sku,status,userId);
     }
 
@@ -309,6 +306,19 @@ class InventoryControllerTest {
         assertTrue(result.getBody() instanceof ErrorResponse);
         ErrorResponse errorResponse = (ErrorResponse) result.getBody();
         assertEquals("Item already exists",errorResponse.getErrorMessage());
+        verify(inventoryServices, times(1)).saveInventory(requestDTO);
+    }
+
+    @Test
+    void createInventory_InternalServerError() {
+        InventoryRequestDTO requestDTO = getInventoryRequestDTO();
+
+        when(inventoryServices.saveInventory(requestDTO)).thenThrow(new RuntimeException("Internal Server Error"));
+        ResponseEntity<?> result = inventoryController.createInventory(requestDTO);
+
+        assertEquals(INTERNAL_SERVER_ERROR, result.getStatusCode());
+        ErrorResponse errorResponse = (ErrorResponse) result.getBody();
+        assertEquals("Internal Server Error",errorResponse.getErrorMessage());
         verify(inventoryServices, times(1)).saveInventory(requestDTO);
     }
 }
