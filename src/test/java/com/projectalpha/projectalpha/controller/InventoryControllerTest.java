@@ -39,7 +39,7 @@ class InventoryControllerTest {
     @Test
     void testGetBySku_Success() {
         String sku = "SKU123";
-        InventoryEntity mockInventory = InventoryEntity.builder()
+        InventoryResponseDTO mockInventory = InventoryResponseDTO.builder()
                 .sku(sku)
                 .vin(123456L)
                 .make("Toyota")

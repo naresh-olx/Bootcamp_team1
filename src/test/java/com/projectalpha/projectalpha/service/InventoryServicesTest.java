@@ -1,5 +1,6 @@
 package com.projectalpha.projectalpha.service;
 
+import com.projectalpha.projectalpha.dto.InventoryResponseDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
 import com.projectalpha.projectalpha.repository.InventoryRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,7 @@ class InventoryServicesTest {
 
         when(inventoryRepository.findBySku(sku)).thenReturn(Optional.of(expected));
 
-        InventoryEntity actual = inventoryServices.getInventoryBySku(sku);
+        InventoryResponseDTO actual = inventoryServices.getInventoryBySku(sku);
 
         assertNotNull(actual);
         assertEquals(expected.getSku(), actual.getSku());
