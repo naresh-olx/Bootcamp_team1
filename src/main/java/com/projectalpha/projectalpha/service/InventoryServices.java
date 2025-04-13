@@ -46,7 +46,6 @@ public class InventoryServices {
         boolean vinExists = inventoryRepository.existsByVin(inventoryEntity.getVin());
 
         if (vinExists) {
-//            throw new DuplicateSkuException("Inventory with SKU '" + inventoryEntity.getSku() + "' already exists.");
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Inventory with this VIN already exists");
         }
 
@@ -145,21 +144,30 @@ public class InventoryServices {
     }
 
     private void userIdAndSkuValidator(String sku, String userId) {
-        boolean userExists = userRepository.existsById(userId);
-        if (!userExists) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String emailId = authentication.getName();
+        UserEntity userEntity = userRepository.findByEmailId(emailId);
+
+        if(userEntity == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist with given Id: " + userId);
         }
+
         boolean skuExists = inventoryRepository.existsById(sku);
         if (!skuExists) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given Id: " + sku);
         }
+        boolean skuUserMatches = userEntity.getUserId().equals(userId);
     }
 
     public InventoryEntity updateInventoryStatus(String sku, InventoryStatus status, String userId) {
         userIdAndSkuValidator(sku, userId);
 
         InventoryEntity inventory = inventoryRepository.findById(sku)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given Id: " + sku));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Sku doesn't exist with given Id: " + sku
+                ));
 
         inventory.setPrimaryStatus(status);
         inventory.setUpdatedBy(userId);

@@ -1,6 +1,7 @@
 package com.projectalpha.projectalpha.entity;
 
 import com.projectalpha.projectalpha.enums.InventoryStatus;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -26,6 +27,7 @@ public class InventoryEntity {
     private String primaryLocation;
 
     @Indexed(unique = true)
+    @NotNull
     private Long vin;
 
     private String make;

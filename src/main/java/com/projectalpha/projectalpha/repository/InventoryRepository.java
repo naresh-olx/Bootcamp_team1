@@ -14,6 +14,4 @@ public interface InventoryRepository extends MongoRepository<InventoryEntity, St
     Optional<InventoryEntity> findBySku(String sku);
     Page<InventoryEntity> findAllByCreatedBy(String userId, Pageable pageable);
     boolean existsByVin(Long vin);
-
-
 }
