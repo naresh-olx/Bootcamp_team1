@@ -4,7 +4,6 @@ import com.projectalpha.projectalpha.customException.DuplicateSkuException;
 import com.projectalpha.projectalpha.dto.ErrorResponse;
 import com.projectalpha.projectalpha.dto.UpdateDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
-import com.projectalpha.projectalpha.enums.InventoryStatus;
 import com.projectalpha.projectalpha.service.InventoryServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,7 +41,8 @@ public class InventoryController {
     @GetMapping("/inventories")
     public ResponseEntity<?> getAllInventory(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size
+    ) {
 
         try {
             Page<InventoryEntity> inventories = inventoryServices.getAllInventories(page, size);
@@ -67,7 +67,7 @@ public class InventoryController {
     @PutMapping("/{sku}")
     public ResponseEntity<?> update(@PathVariable String sku, @RequestBody UpdateDTO updateDTO) {
         try {
-            InventoryEntity updatedItem = inventoryServices.updateInventoryItem(sku , updateDTO);
+            InventoryEntity updatedItem = inventoryServices.updateInventoryItem(sku, updateDTO);
             return ResponseEntity.status(HttpStatus.OK).body(updatedItem);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));
@@ -89,15 +89,17 @@ public class InventoryController {
     }
 
     @PatchMapping("/updateStatus/{sku}")
-    public ResponseEntity<?> updateStatus(@PathVariable String sku,
-                                          @RequestParam InventoryStatus status,
-                                          @RequestParam String userId) {
-        try{
+    public ResponseEntity<?> updateStatus(
+            @PathVariable String sku,
+            @RequestParam String status,
+            @RequestParam String userId
+    ) {
+        try {
             InventoryEntity updateInventory = inventoryServices.updateInventoryStatus(sku, status, userId);
             return ResponseEntity.ok(updateInventory);
-        }catch (ResponseStatusException e){
+        } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
         }
     }

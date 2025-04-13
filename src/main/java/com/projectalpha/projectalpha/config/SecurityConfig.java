@@ -35,7 +35,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/V1/**").authenticated()
                         .anyRequest().permitAll()
                 )
-//                .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
