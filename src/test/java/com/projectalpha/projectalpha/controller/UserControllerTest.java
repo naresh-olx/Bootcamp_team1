@@ -1,6 +1,7 @@
 package com.projectalpha.projectalpha.controller;
 
 import com.projectalpha.projectalpha.dto.ErrorResponse;
+import com.projectalpha.projectalpha.dto.UserLoginDTO;
 import com.projectalpha.projectalpha.dto.UserRequestDTO;
 import com.projectalpha.projectalpha.dto.UserResponseDTO;
 import com.projectalpha.projectalpha.service.UserServices;
@@ -83,5 +84,27 @@ class UserControllerTest {
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,response.getStatusCode());
         verify(userServices,times(1)).registerUser(userRequestDTO);
+    }
+
+
+    private UserLoginDTO mockUserLoginDTO() {
+        UserLoginDTO userLoginDTO = new UserLoginDTO();
+        userLoginDTO.setEmailId("response-test@email.com");
+        userLoginDTO.setPassword("response-test");
+        return userLoginDTO;
+    }
+
+    @Test
+    void login_Success() {
+        UserLoginDTO userLoginDTO = mockUserLoginDTO();
+        String token = "fake-token";
+
+        when(userServices.loginUser(userLoginDTO)).thenReturn(token);
+        ResponseEntity<?> response = userController.login(userLoginDTO);
+
+        assertNotNull(response);
+        assertEquals(OK,response.getStatusCode());
+        assertEquals(token, response.getBody());
+        verify(userServices,times(1)).loginUser(userLoginDTO);
     }
 }
