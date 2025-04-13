@@ -154,7 +154,7 @@ public class InventoryServices {
         InventoryEntity inventory = inventoryRepository.findById(sku)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sku doesn't exist with given Id: " + sku));
 
-        inventory.setPrimaryStatus(InventoryStatus.valueOf(status));
+        inventory.setPrimaryStatus(status);
         inventory.setUpdatedBy(userId);
         return inventoryRepository.save(inventory);
     }
