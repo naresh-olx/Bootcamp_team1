@@ -29,6 +29,11 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(getSigningKey()).build().parseClaimsJws(token).getPayload();
     }
 
+    public Date extractExpiration(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.getExpiration();
+    }
+
 
 
 }
