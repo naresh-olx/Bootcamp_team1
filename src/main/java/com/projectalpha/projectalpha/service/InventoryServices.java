@@ -37,7 +37,7 @@ public class InventoryServices {
         String emailId = authentication.getName();
         UserEntity userEntity = userRepository.findByEmailId(emailId);
 
-        if (inventoryEntity.getVin() == 0) {
+        if (inventoryEntity.getVin() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "VIN is required");
         }
 
