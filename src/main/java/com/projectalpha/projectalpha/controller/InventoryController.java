@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/api/V1")
+@RequestMapping("/api/V1/inventories")
 public class InventoryController {
 
     @Autowired
@@ -27,7 +27,7 @@ public class InventoryController {
         return "Health is OK !! 👌🏻😎";
     }
 
-    @PostMapping("/inventory")
+    @PostMapping("/add-inventory")
     public ResponseEntity<?> createInventory(@RequestBody InventoryRequestDTO inventoryEntity) {
         try {
             InventoryResponseDTO savedItem = inventoryServices.saveInventory(inventoryEntity);
