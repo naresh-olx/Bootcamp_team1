@@ -46,7 +46,15 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-        return "";
+        return Jwts.builder()
+                .claims(claims)
+                .subject(subject)
+                .header().empty().add("typ", "JWT")
+                .and()
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis()+1000*60*60))
+                .signWith(getSigningKey())
+                .compact();
     }
 
 
