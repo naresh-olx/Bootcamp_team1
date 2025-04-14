@@ -156,7 +156,7 @@ public class InventoryServices {
         if (!inventory.getCreatedBy().equals(userEntity.getUserId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "user is unauthorised");
         }
-        return emailId;
+        return userEntity.getUserId();
     }
 
     public InventoryResponseDTO updateInventoryStatus(String sku, InventoryRequestDTO updateDTO) {
