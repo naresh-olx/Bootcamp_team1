@@ -117,7 +117,6 @@ class InventoryControllerTest {
         verify(inventoryServices, times(1)).deleteInventoryItem(sku);
     }
 
-    // Get-All-Inventory test method
     @Test
     void testGetAllInventory_Success() {
         int page = 0;
@@ -160,7 +159,6 @@ class InventoryControllerTest {
         verify(inventoryServices, times(1)).getAllInventories(page, size);
     }
 
-    // Update Test Methods
     @Test
     void updateInventory_Success() {
         String sku = "SKU123";
