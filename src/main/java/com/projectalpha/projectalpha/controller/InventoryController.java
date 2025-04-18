@@ -4,6 +4,7 @@ import com.projectalpha.projectalpha.dto.ErrorResponse;
 import com.projectalpha.projectalpha.dto.InventoryRequestDTO;
 import com.projectalpha.projectalpha.dto.InventoryResponseDTO;
 import com.projectalpha.projectalpha.entity.InventoryEntity;
+import com.projectalpha.projectalpha.enums.InventoryStatus;
 import com.projectalpha.projectalpha.service.InventoryServices;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,6 @@ public class InventoryController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-
         try {
             Page<InventoryEntity> inventories = inventoryServices.getAllInventories(page, size);
             return ResponseEntity.status(HttpStatus.OK).body(inventories);
@@ -85,11 +85,13 @@ public class InventoryController {
         }
     }
 
-    @DeleteMapping("/{sku}")
-    public ResponseEntity<?> deleteInventory(@PathVariable String sku) {
+    @PatchMapping("/{sku}")
+    public ResponseEntity<?> updateStatus(
+            @PathVariable String sku,
+            @RequestParam(name = "status") InventoryStatus status) {
         try {
-            InventoryResponseDTO deletedItem = inventoryServices.deleteInventoryItem(sku);
-            return ResponseEntity.status(HttpStatus.OK).body(deletedItem);
+            InventoryResponseDTO updateInventory = inventoryServices.updateInventoryStatus(sku, status);
+            return ResponseEntity.status(HttpStatus.OK).body(updateInventory);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode())
                     .body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));
@@ -99,13 +101,11 @@ public class InventoryController {
         }
     }
 
-    @PatchMapping("/updateStatus/{sku}")
-    public ResponseEntity<?> updateStatus(
-            @PathVariable String sku,
-            @RequestBody InventoryRequestDTO inventoryRequest) {
+    @DeleteMapping("/{sku}")
+    public ResponseEntity<?> deleteInventory(@PathVariable String sku) {
         try {
-            InventoryResponseDTO updateInventory = inventoryServices.updateInventoryStatus(sku, inventoryRequest);
-            return ResponseEntity.status(HttpStatus.OK).body(updateInventory);
+            InventoryResponseDTO deletedItem = inventoryServices.deleteInventoryItem(sku);
+            return ResponseEntity.status(HttpStatus.OK).body(deletedItem);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode())
                     .body(new ErrorResponse(e.getStatusCode(), e.getBody().getDetail()));

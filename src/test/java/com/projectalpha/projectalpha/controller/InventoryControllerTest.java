@@ -205,45 +205,40 @@ class InventoryControllerTest {
 
     @Test
     void updateStatus_Success() {
-        InventoryRequestDTO inventoryDTO = new InventoryRequestDTO();
-        inventoryDTO.setPrimaryStatus(InventoryStatus.SOLD);
+        InventoryStatus status = InventoryStatus.SOLD;
         String sku = "SKU123";
         InventoryResponseDTO item = InventoryResponseDTO.builder().sku(sku).make("Toyota").build();
-        when(inventoryServices.updateInventoryStatus(sku,inventoryDTO)).thenReturn(item);
-        ResponseEntity<?> result = inventoryController.updateStatus(sku,inventoryDTO);
+        when(inventoryServices.updateInventoryStatus(sku,status)).thenReturn(item);
+        ResponseEntity<?> result = inventoryController.updateStatus(sku,status);
 
         assertEquals(OK, result.getStatusCode());
-        verify(inventoryServices, times(1)).updateInventoryStatus(sku,inventoryDTO);
+        verify(inventoryServices, times(1)).updateInventoryStatus(sku,status);
     }
 
     @Test
     void updateStatus_NotFound() {
-        InventoryRequestDTO inventoryDTO = new InventoryRequestDTO();
         String sku = "SKU404";
-        inventoryDTO.setPrimaryStatus(InventoryStatus.SOLD);
-
-        when(inventoryServices.updateInventoryStatus(sku,inventoryDTO)).thenThrow(new ResponseStatusException(NOT_FOUND, "Item not found"));
-        ResponseEntity<?> result = inventoryController.updateStatus(sku,inventoryDTO);
+        InventoryStatus status = InventoryStatus.SOLD;
+        when(inventoryServices.updateInventoryStatus(sku,status)).thenThrow(new ResponseStatusException(NOT_FOUND, "Item not found"));
+        ResponseEntity<?> result = inventoryController.updateStatus(sku,status);
 
         assertEquals(NOT_FOUND, result.getStatusCode());
         ErrorResponse errorResponse = (ErrorResponse) result.getBody();
         assertEquals("Item not found",errorResponse.getErrorMessage());
-        verify(inventoryServices, times(1)).updateInventoryStatus(sku,inventoryDTO);
+        verify(inventoryServices, times(1)).updateInventoryStatus(sku,status);
     }
 
     @Test
     void updateStatus_InternalServerError() {
-        InventoryRequestDTO inventoryDTO = new InventoryRequestDTO();
         String sku = "SKU500";
-        inventoryDTO.setPrimaryStatus(InventoryStatus.SOLD);
-
-        when(inventoryServices.updateInventoryStatus(sku,inventoryDTO)).thenThrow(new RuntimeException("Internal Server Error"));
-        ResponseEntity<?> result = inventoryController.updateStatus(sku,inventoryDTO);
+        InventoryStatus status = InventoryStatus.SOLD;
+        when(inventoryServices.updateInventoryStatus(sku,status)).thenThrow(new RuntimeException("Internal Server Error"));
+        ResponseEntity<?> result = inventoryController.updateStatus(sku,status);
 
         assertEquals(INTERNAL_SERVER_ERROR, result.getStatusCode());
         ErrorResponse errorResponse = (ErrorResponse) result.getBody();
         assertEquals("Internal Server Error",errorResponse.getErrorMessage());
-        verify(inventoryServices, times(1)).updateInventoryStatus(sku,inventoryDTO);
+        verify(inventoryServices, times(1)).updateInventoryStatus(sku,status);
     }
 
 
