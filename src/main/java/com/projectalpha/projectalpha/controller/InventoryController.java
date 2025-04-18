@@ -21,7 +21,7 @@ public class InventoryController {
     @Autowired
     private InventoryServices inventoryServices;
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<?> createInventory(@Valid @RequestBody InventoryRequestDTO inventoryRequest) {
         try {
             InventoryResponseDTO savedItem = inventoryServices.saveInventory(inventoryRequest);
@@ -41,7 +41,7 @@ public class InventoryController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<?> getAllInventory(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
