@@ -94,10 +94,9 @@ public class InventoryServices {
     }
 
     public InventoryResponseDTO updateInventoryItem(String sku, InventoryRequestDTO updateDTO) {
-
-        String emailId = userIdAndSkuValidator(sku);
-
-        InventoryEntity updatedInventory = inventoryRepository.findById(sku).get();
+        String userId = userIdValidator(sku);
+        InventoryEntity updatedInventory = inventoryRepository.findById(sku)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory not found"));
         if(updateDTO.getVin() != null) {
             updatedInventory.setVin(updateDTO.getVin());
         }
@@ -128,48 +127,46 @@ public class InventoryServices {
         if(updateDTO.getSellingPrice() != null){
             updatedInventory.setSellingPrice(updateDTO.getSellingPrice());
         }
-        updatedInventory.setUpdatedBy(emailId);
+        updatedInventory.setUpdatedBy(userId);
         updatedInventory.setUpdatedAt(LocalDateTime.now());
         return InventoryMapper.toResponseDTO(inventoryRepository.save(updatedInventory));
     }
 
-    public InventoryResponseDTO deleteInventoryItem(String sku) {
-        userIdAndSkuValidator(sku);
-        InventoryEntity deletedInventory = inventoryRepository.findById(sku).get();
-        inventoryRepository.deleteById(sku);
-        return InventoryMapper.toResponseDTO(deletedInventory);
-    }
-
-    private String userIdAndSkuValidator(String sku) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String emailId = authentication.getName();
-        UserEntity userEntity = userRepository.findByEmailId(emailId);
-
-        if(userEntity == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "User doesn't exist with given EmailId: " + emailId);
-        }
-
-        InventoryEntity inventory = inventoryRepository.findById(sku).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory not found"));
-
-        if (!inventory.getCreatedBy().equals(userEntity.getUserId())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "user is unauthorised");
-        }
-        return userEntity.getUserId();
-    }
-
     public InventoryResponseDTO updateInventoryStatus(String sku, InventoryStatus status) {
-        String emailId = userIdAndSkuValidator(sku);
+        String userId = userIdValidator(sku);
 
         InventoryEntity inventory = inventoryRepository.findById(sku)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Sku doesn't exist with given Id: " + sku));
 
         inventory.setPrimaryStatus(status);
-        inventory.setUpdatedBy(emailId);
+        inventory.setUpdatedBy(userId);
         return InventoryMapper.toResponseDTO(inventoryRepository.save(inventory));
     }
 
+    public InventoryResponseDTO deleteInventoryItem(String sku) {
+        userIdValidator(sku);
+        InventoryEntity deletedInventory = inventoryRepository.findById(sku)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory not found"));
+        inventoryRepository.deleteById(sku);
+        return InventoryMapper.toResponseDTO(deletedInventory);
+    }
+
+    private String userIdValidator(String sku) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String emailId = authentication.getName();
+        UserEntity userEntity = userRepository.findByEmailId(emailId);
+        if(userEntity == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not exists with given EmailId: " + emailId);
+        }
+        InventoryEntity inventory = inventoryRepository.findById(sku).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory not found"));
+
+        String userId = userEntity.getUserId();
+        if (!inventory.getCreatedBy().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "User is not authorized for this inventory item");
+        }
+        return userId;
+    }
 }
