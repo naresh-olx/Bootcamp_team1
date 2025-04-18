@@ -29,7 +29,7 @@ public class InventoryServices {
     private InventoryRepository inventoryRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     public InventoryResponseDTO saveInventory(@Valid InventoryRequestDTO inventoryEntity) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -41,7 +41,7 @@ public class InventoryServices {
         }
 
         if(userEntity == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user doesn't exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User doesn't exist");
         }
 
         boolean vinExists = inventoryRepository.existsByVin(inventoryEntity.getVin());
@@ -94,79 +94,81 @@ public class InventoryServices {
     }
 
     public InventoryResponseDTO updateInventoryItem(String sku, InventoryRequestDTO updateDTO) {
-        String userId = userIdValidator(sku);
-        InventoryEntity updatedInventory = inventoryRepository.findById(sku)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory not found"));
+        String userId = userIdGetterAndAuthenticator();
+        InventoryEntity inventoryToUpdate = inventoryRepository.findById(sku)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Inventory not found with given SKU: " + sku));
+        userIdAuthorizer(userId, inventoryToUpdate);
         if(updateDTO.getVin() != null) {
-            updatedInventory.setVin(updateDTO.getVin());
+            inventoryToUpdate.setVin(updateDTO.getVin());
         }
         if (updateDTO.getType() != null){
-            updatedInventory.setType(updateDTO.getType());
+            inventoryToUpdate.setType(updateDTO.getType());
         }
         if (updateDTO.getPrimaryStatus() != null){
-            updatedInventory.setPrimaryStatus(updateDTO.getPrimaryStatus());
+            inventoryToUpdate.setPrimaryStatus(updateDTO.getPrimaryStatus());
         }
         if (updateDTO.getPrimaryLocation() != null){
-            updatedInventory.setPrimaryLocation(updateDTO.getPrimaryLocation());
+            inventoryToUpdate.setPrimaryLocation(updateDTO.getPrimaryLocation());
         }
         if (updateDTO.getMake() != null){
-            updatedInventory.setMake(updateDTO.getMake());
+            inventoryToUpdate.setMake(updateDTO.getMake());
         }
         if (updateDTO.getModel() != null){
-            updatedInventory.setModel(updateDTO.getModel());
+            inventoryToUpdate.setModel(updateDTO.getModel());
         }
         if (updateDTO.getYear() != null){
-            updatedInventory.setYear(updateDTO.getYear());
+            inventoryToUpdate.setYear(updateDTO.getYear());
         }
         if (updateDTO.getTrim() != null){
-            updatedInventory.setTrim(updateDTO.getTrim());
+            inventoryToUpdate.setTrim(updateDTO.getTrim());
         }
         if(updateDTO.getCostPrice() != null){
-            updatedInventory.setCostPrice(updateDTO.getCostPrice());
+            inventoryToUpdate.setCostPrice(updateDTO.getCostPrice());
         }
         if(updateDTO.getSellingPrice() != null){
-            updatedInventory.setSellingPrice(updateDTO.getSellingPrice());
+            inventoryToUpdate.setSellingPrice(updateDTO.getSellingPrice());
         }
-        updatedInventory.setUpdatedBy(userId);
-        updatedInventory.setUpdatedAt(LocalDateTime.now());
-        return InventoryMapper.toResponseDTO(inventoryRepository.save(updatedInventory));
+        inventoryToUpdate.setUpdatedBy(userId);
+        inventoryToUpdate.setUpdatedAt(LocalDateTime.now());
+        return InventoryMapper.toResponseDTO(inventoryRepository.save(inventoryToUpdate));
     }
 
     public InventoryResponseDTO updateInventoryStatus(String sku, InventoryStatus status) {
-        String userId = userIdValidator(sku);
-
+        String userId = userIdGetterAndAuthenticator();
         InventoryEntity inventory = inventoryRepository.findById(sku)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Sku doesn't exist with given Id: " + sku));
-
+                        "Inventory not found with given SKU: " + sku));
+        userIdAuthorizer(userId, inventory);
         inventory.setPrimaryStatus(status);
         inventory.setUpdatedBy(userId);
         return InventoryMapper.toResponseDTO(inventoryRepository.save(inventory));
     }
 
     public InventoryResponseDTO deleteInventoryItem(String sku) {
-        userIdValidator(sku);
-        InventoryEntity deletedInventory = inventoryRepository.findById(sku)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory not found"));
+        String userId = userIdGetterAndAuthenticator();
+        InventoryEntity inventoryToDelete = inventoryRepository.findById(sku)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Inventory not found with given SKU: " + sku));
+        userIdAuthorizer(userId, inventoryToDelete);
         inventoryRepository.deleteById(sku);
-        return InventoryMapper.toResponseDTO(deletedInventory);
+        return InventoryMapper.toResponseDTO(inventoryToDelete);
     }
 
-    private String userIdValidator(String sku) {
+    private String userIdGetterAndAuthenticator() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String emailId = authentication.getName();
         UserEntity userEntity = userRepository.findByEmailId(emailId);
         if(userEntity == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not exists with given EmailId: " + emailId);
         }
-        InventoryEntity inventory = inventoryRepository.findById(sku).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory not found"));
+        return userEntity.getUserId();
+    }
 
-        String userId = userEntity.getUserId();
+    private static void userIdAuthorizer(String userId, InventoryEntity inventory) {
         if (!inventory.getCreatedBy().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "User is not authorized for this inventory item");
         }
-        return userId;
     }
 }
