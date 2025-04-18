@@ -14,15 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/api/V1/users")
+@RequestMapping("/api/V1/user")
 public class UserController {
     @Autowired
     private UserServices userServices;
-
-    @GetMapping("/")
-    public String healthCheck() {
-        return "Health Check";
-    }
 
     @PostMapping("/signup")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserRequestDTO userDTO) {

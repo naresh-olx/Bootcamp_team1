@@ -20,11 +20,6 @@ public class InventoryController {
     @Autowired
     private InventoryServices inventoryServices;
 
-    @GetMapping("/health-ok")
-    public String HealthOk() {
-        return "Health is OK !! 👌🏻😎";
-    }
-
     @PostMapping("/add")
     public ResponseEntity<?> createInventory(@Valid @RequestBody InventoryRequestDTO inventoryRequest) {
         try {
