@@ -18,8 +18,12 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/V1/inventory")
 public class InventoryController {
 
+    private final InventoryServices inventoryServices;
+
     @Autowired
-    private InventoryServices inventoryServices;
+    public InventoryController(InventoryServices inventoryServices) {
+        this.inventoryServices = inventoryServices;
+    }
 
     @PostMapping
     public ResponseEntity<?> createInventory(@Valid @RequestBody InventoryRequestDTO inventoryRequest) {

@@ -24,12 +24,13 @@ import java.time.LocalDateTime;
 
 @Service
 public class InventoryServices {
-
+    private final InventoryRepository inventoryRepository;
+    private final UserRepository userRepository;
     @Autowired
-    private InventoryRepository inventoryRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    public InventoryServices(InventoryRepository inventoryRepository, UserRepository userRepository) {
+        this.inventoryRepository = inventoryRepository;
+        this.userRepository = userRepository;
+    }
 
     public InventoryResponseDTO saveInventory(@Valid InventoryRequestDTO saveDTO) {
         String userId = userIdGetterAndAuthenticator();

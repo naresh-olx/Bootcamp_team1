@@ -16,8 +16,12 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/api/V1/user")
 public class UserController {
+    private final UserServices userServices;
+
     @Autowired
-    private UserServices userServices;
+    public UserController(UserServices userServices) {
+        this.userServices = userServices;
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserRequestDTO userDTO) {
