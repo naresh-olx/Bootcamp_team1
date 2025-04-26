@@ -28,13 +28,14 @@ public class UserServices {
     private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    public UserServices(UserRepository userRepository, UserDetailsService userDetailsService, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
+    public UserServices(UserRepository userRepository, UserDetailsService userDetailsService, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
     }
 
     public UserResponseDTO registerUser(@Valid UserRequestDTO userDTO) {

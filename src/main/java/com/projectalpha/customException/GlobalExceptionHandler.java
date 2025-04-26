@@ -40,11 +40,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFound(NoHandlerFoundException ex) {
-        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND, "Resource not found");
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-    }
+//    @ExceptionHandler(NoHandlerFoundException.class)
+//    public ResponseEntity<ErrorResponse> handleNotFound(NoHandlerFoundException ex) {
+//        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND, "Resource not found");
+//        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+//    }
 
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

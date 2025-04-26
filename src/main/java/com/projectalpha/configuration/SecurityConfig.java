@@ -1,4 +1,4 @@
-package com.projectalpha.security;
+package com.projectalpha.configuration;
 
 import com.projectalpha.filter.JwtFilter;
 import com.projectalpha.service.UserDetailsServiceImpl;
@@ -29,7 +29,7 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/V1/users/**").permitAll()
+                        .requestMatchers("/api/V1/user/**").permitAll()
                         .requestMatchers("/api/V1/**").authenticated()
                         .anyRequest().permitAll()
                 )
