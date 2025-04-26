@@ -6,6 +6,7 @@ import com.projectalpha.dto.InventoryResponseDTO;
 import com.projectalpha.entity.InventoryEntity;
 import com.projectalpha.enums.InventoryStatus;
 import com.projectalpha.service.InventoryServices;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+@Tag(name = "Inventory Management", description = "Operations related to Inventory")
 @RestController
 @RequestMapping("/api/V1/inventory")
 public class InventoryController {
