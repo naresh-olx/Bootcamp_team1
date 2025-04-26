@@ -9,7 +9,6 @@ import com.projectalpha.mapper.InventoryMapper;
 import com.projectalpha.repository.InventoryRepository;
 import com.projectalpha.repository.UserRepository;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +25,7 @@ import java.time.LocalDateTime;
 public class InventoryServices {
     private final InventoryRepository inventoryRepository;
     private final UserRepository userRepository;
-    @Autowired
+
     public InventoryServices(InventoryRepository inventoryRepository, UserRepository userRepository) {
         this.inventoryRepository = inventoryRepository;
         this.userRepository = userRepository;

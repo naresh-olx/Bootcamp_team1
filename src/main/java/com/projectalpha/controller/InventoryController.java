@@ -7,7 +7,6 @@ import com.projectalpha.entity.InventoryEntity;
 import com.projectalpha.enums.InventoryStatus;
 import com.projectalpha.service.InventoryServices;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,6 @@ public class InventoryController {
 
     private final InventoryServices inventoryServices;
 
-    @Autowired
     public InventoryController(InventoryServices inventoryServices) {
         this.inventoryServices = inventoryServices;
     }

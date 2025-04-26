@@ -24,21 +24,18 @@ import java.time.LocalDateTime;
 
 @Service
 public class UserServices {
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final UserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
     private AuthenticationManager authenticationManager;
+
+    public UserServices(UserRepository userRepository, UserDetailsService userDetailsService, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public UserResponseDTO registerUser(@Valid UserRequestDTO userDTO) {
 
